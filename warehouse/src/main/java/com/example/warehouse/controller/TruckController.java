@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/manager/trucks")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TruckController {
 
 
@@ -29,13 +30,13 @@ public class TruckController {
     }
 
     @PutMapping("/{truckId}")
-    public void updateTruck(@PathVariable String truckId, @RequestBody Truck truck) {
+    public void updateTruck(@PathVariable Long truckId, @RequestBody Truck truck) {
         truck.setId(truckId);
         truckService.updateTruck(TruckDto.fromEntity(truck));
     }
 
     @DeleteMapping("/{truckId}")
-    public void deleteTruck(@PathVariable String truckId) {
+    public void deleteTruck(@PathVariable Long truckId) {
         truckService.deleteTruck(truckId);
     }
 }

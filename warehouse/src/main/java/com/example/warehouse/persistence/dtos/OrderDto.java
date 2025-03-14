@@ -32,7 +32,7 @@ public class OrderDto {
         OrderDto dto = new OrderDto();
         dto.setOrderNumber(order.getOrderNumber());
         dto.setSubmittedDate(order.getSubmittedDate());
-        dto.setStatus(order.getStatus());
+        dto.setStatus(OrderStatus.valueOf(order.getStatus()));
         dto.setDeadlineDate(order.getDeadlineDate());
         dto.setOrderItems(order.getOrderItems());
         dto.setClient(order.getClient());
@@ -44,7 +44,7 @@ public class OrderDto {
         Order order = new Order();
         order.setOrderNumber(getOrderNumber());
         order.setSubmittedDate(getSubmittedDate());
-        order.setStatus(getStatus());
+        order.setStatus(String.valueOf(getStatus()));
         order.setDeadlineDate(getDeadlineDate());
         order.setOrderItems(getOrderItems());
         order.setClient(getClient());

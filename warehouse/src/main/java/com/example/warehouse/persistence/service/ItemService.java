@@ -13,5 +13,5 @@ public interface ItemService {
 
     void updateItem(ItemDto item);
 
-    void deleteItem(String id);
+    void deleteItem(Long id);
 }

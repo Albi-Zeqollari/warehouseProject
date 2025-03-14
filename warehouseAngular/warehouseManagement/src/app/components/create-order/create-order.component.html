@@ -1,0 +1,82 @@
+<div class="dashboard-container">
+  <mat-card>
+    <mat-card-title>Create Order</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+        <!-- Deadline Date -->
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Deadline Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="deadlineDate"
+              placeholder="Choose deadline date"
+            />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <!-- Order Items Section -->
+        <div class="order-items">
+          <h3>Order Items</h3>
+          <div formArrayName="orderItems">
+            <div
+              *ngFor="let item of orderItems.controls; let i = index"
+              [formGroupName]="i"
+              class="order-item"
+            >
+              <mat-form-field appearance="fill">
+                <mat-label>Item Name</mat-label>
+                <input
+                  matInput
+                  formControlName="itemName"
+                  placeholder="Enter item name"
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Quantity</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="quantity"
+                  placeholder="Enter quantity"
+                />
+              </mat-form-field>
+
+              <button
+                mat-icon-button
+                color="warn"
+                type="button"
+                (click)="removeItem(i)"
+                aria-label="Remove item"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="addItem()"
+          >
+            Add Order Item
+          </button>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button mat-raised-button color="accent" type="submit">
+            Submit Order
+          </button>
+          <button mat-raised-button type="button" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

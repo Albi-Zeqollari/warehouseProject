@@ -1,7 +1,6 @@
 package com.example.warehouse.persistence.service.impl;
 
 import com.example.warehouse.persistence.dtos.OrderDto;
-import com.example.warehouse.persistence.dtos.UserDto;
 import com.example.warehouse.persistence.entity.*;
 import com.example.warehouse.persistence.repository.ItemRepository;
 import com.example.warehouse.persistence.repository.OrderRepository;
@@ -11,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto getOrder(String orderId) {
+    public OrderDto getOrder(Long orderId) {
         return orderRepository.findById(orderId)
                 .map(OrderDto::fromEntity)
                 .orElse(null);
@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void submitOrder(String orderId) {
+    public void submitOrder(Long orderId) {
         OrderDto orderDto = getOrder(orderId);
         if (orderDto == null) {
             log.error("Order not found");
@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void approveOrder(String orderId) {
+    public void approveOrder(Long orderId) {
         OrderDto orderDto = getOrder(orderId);
         if (orderDto != null && orderDto.getStatus() == OrderStatus.AWAITING_APPROVAL) {
             orderDto.setStatus(OrderStatus.APPROVED);
@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void declineOrder(String orderId, String reason) {
+    public void declineOrder(Long orderId, String reason) {
         OrderDto orderDto = getOrder(orderId);
         if (orderDto != null && orderDto.getStatus() == OrderStatus.AWAITING_APPROVAL) {
             orderDto.setStatus(OrderStatus.DECLINED);
@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void cancelOrder(String orderId) {
+    public void cancelOrder(Long orderId) {
         OrderDto orderDto = getOrder(orderId);
         if (orderDto != null &&
                 orderDto.getStatus() != OrderStatus.FULFILLED &&
@@ -94,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void scheduleDelivery(String orderId, List<Truck> assignedTrucks) {
+    public void scheduleDelivery(Long orderId, List<Truck> assignedTrucks) {
         OrderDto orderDto = getOrder(orderId);
         if (orderDto != null && orderDto.getStatus() == OrderStatus.APPROVED) {
 
@@ -116,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void fulfillOrder(String orderId) {
+    public void fulfillOrder(Long orderId) {
         OrderDto orderDto = getOrder(orderId);
         if (orderDto != null && orderDto.getStatus() == OrderStatus.UNDER_DELIVERY) {
             orderDto.setStatus(OrderStatus.FULFILLED);
@@ -141,13 +141,42 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    public void createOrder(UserDto client) {
+    @Override
+    @Transactional
+    public List<OrderDto> findByClient_Id(Long id) {
+        return orderRepository.findByClient_Id(id)
+                .stream().map(OrderDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    @Override
+    public void createOrder(OrderDto orderDto) {
+
+        // Build the Order entity.
         Order order = new Order();
-        order.setStatus(OrderStatus.CREATED);
-        order.setClient(client.toEntity());
         order.setOrderNumber(generateOrderNumber());
+        order.setSubmittedDate(orderDto.getSubmittedDate());
+        order.setDeadlineDate(orderDto.getDeadlineDate());
+        order.setStatus(String.valueOf(orderDto.getStatus()));
+        order.setDeclineReason(orderDto.getDeclineReason());
+        order.setClient(orderDto.getClient());
+
+        // Process each order item.
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItem orderItemDto : orderDto.getOrderItems()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setItem(orderItemDto.getItem());
+            orderItem.setRequestedQuantity(orderItemDto.getRequestedQuantity());
+            orderItem.setOrder(order);
+            orderItems.add(orderItem);
+        }
+        order.setOrderItems(orderItems);
+
         orderRepository.save(order);
     }
+
 
     private String generateOrderNumber() {
         return "ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();

@@ -44,7 +44,7 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     @Transactional
-    public void deleteTruck(String id) {
+    public void deleteTruck(Long id) {
         truckRepository.deleteById(id);
     }
 }

@@ -28,15 +28,12 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        // 1) Check the path
         String path = request.getServletPath();
         if ("/api/auth/login".equals(path) || "/api/auth/register".equals(path)) {
-            // 2) Skip JWT checks for these endpoints
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 3) If not login/register, do your usual token logic:
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);

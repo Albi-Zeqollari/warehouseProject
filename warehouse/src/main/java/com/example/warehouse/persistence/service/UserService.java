@@ -1,6 +1,7 @@
 package com.example.warehouse.persistence.service;
 
 import com.example.warehouse.persistence.dtos.UserDto;
+import com.example.warehouse.persistence.entity.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -11,11 +12,11 @@ public interface UserService {
 
     void updateUser(UserDto user);
 
-    void deleteUser(String userId);
+    void deleteUser(Long userId);
 
     List<UserDto> getAllUsers();
 
-    UserDto findByUsername(String username);
+    User findByUsername(String username);
 
 
 }

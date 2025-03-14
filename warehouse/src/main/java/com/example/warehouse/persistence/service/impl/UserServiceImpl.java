@@ -3,6 +3,7 @@ package com.example.warehouse.persistence.service.impl;
 
 import com.example.warehouse.persistence.dtos.UserDto;
 import com.example.warehouse.persistence.entity.Role;
+import com.example.warehouse.persistence.entity.User;
 import com.example.warehouse.persistence.repository.UserRepository;
 import com.example.warehouse.persistence.service.UserService;
 import com.example.warehouse.utils.JwtUtils;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(String userId) {
+    public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
 
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto findByUsername(String username) {
-        return UserDto.fromEntity(userRepository.findByUsername(username));
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

@@ -1,1 +1,87 @@
-<p>order works!</p>
+<div class="order-container" *ngIf="currentUser.role == 'CLIENT'">
+  <!-- Button to create a new order -->
+  <button mat-raised-button color="primary" (click)="createOrder()">
+    Create Order
+  </button>
+
+  <!-- Filter by Status -->
+  <mat-form-field appearance="fill" class="filter-select">
+    <mat-label>Filter by Status</mat-label>
+    <mat-select [(value)]="filterStatus">
+      <mat-option value="All">All</mat-option>
+      <mat-option value="CREATED">CREATED</mat-option>
+      <mat-option value="AWAITING_APPROVAL">AWAITING_APPROVAL</mat-option>
+      <mat-option value="APPROVED">APPROVED</mat-option>
+      <mat-option value="DECLINED">DECLINED</mat-option>
+      <mat-option value="UNDER_DELIVERY">UNDER_DELIVERY</mat-option>
+      <mat-option value="FULFILLED">FULFILLED</mat-option>
+      <mat-option value="CANCELED">CANCELED</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <!-- Table displaying filtered orders -->
+  <table mat-table [dataSource]="filteredOrder" class="mat-elevation-z8" style="margin-top: 20px; width: 100%;">
+
+    <!-- Order Number Column -->
+    <ng-container matColumnDef="orderNumber">
+      <th mat-header-cell *matHeaderCellDef> Order Number </th>
+      <td mat-cell *matCellDef="let order"> {{ order.orderNumber }} </td>
+    </ng-container>
+
+    <!-- Submitted Date Column -->
+    <ng-container matColumnDef="submittedDate">
+      <th mat-header-cell *matHeaderCellDef> Submitted Date </th>
+      <td mat-cell *matCellDef="let order"> {{ order.submittedDate | date:'short' }} </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let order"> {{ order.status }} </td>
+    </ng-container>
+
+    <!-- Deadline Date Column -->
+    <ng-container matColumnDef="deadlineDate">
+      <th mat-header-cell *matHeaderCellDef> Deadline Date </th>
+      <td mat-cell *matCellDef="let order"> {{ order.deadlineDate | date:'short' }} </td>
+    </ng-container>
+
+    <!-- Client Column -->
+    <ng-container matColumnDef="client">
+      <th mat-header-cell *matHeaderCellDef> Client </th>
+      <td mat-cell *matCellDef="let order"> {{ order.client.name }} </td>
+    </ng-container>
+
+    <!-- Decline Reason Column -->
+    <ng-container matColumnDef="declineReason">
+      <th mat-header-cell *matHeaderCellDef> Decline Reason </th>
+      <td mat-cell *matCellDef="let order">
+        {{ order.declineReason ? order.declineReason : 'N/A' }}
+      </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let order">
+        <button mat-icon-button color="primary" (click)="viewOrder(order)" matTooltip="View">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="editOrder(order)" matTooltip="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteOrder(order)" matTooltip="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button (click)="changeStatus(order)" matTooltip="Change Status">
+          <mat-icon>autorenew</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

@@ -10,11 +10,17 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "item_id")
     private Item item;
 
+    @Column(name = "requested_quantity", nullable = false)
     private int requestedQuantity;
 
 }

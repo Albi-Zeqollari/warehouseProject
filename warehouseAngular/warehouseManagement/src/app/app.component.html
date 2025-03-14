@@ -1,0 +1,36 @@
+<!-- app.component.html -->
+<ng-container *ngIf="!isLoginRoute()">
+  <div>
+    <!-- Persistent Menu (appears only once) -->
+    <mat-toolbar color="primary">
+      <span>Warehouse Management</span>
+      <span class="spacer"></span>
+      <ng-container *ngIf="currentUser">
+        <mat-icon>account_circle</mat-icon>
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <span class="logged-in-info">
+              Logged in as {{ currentUser.role | lowercase }}
+            </span>
+          </button>
+          <button mat-menu-item>
+            <span class="logged-in-info">
+              Username :
+              {{ currentUser.username.trim().length === 8 ? '' : '' + (currentUser.username.trim() | lowercase) }}
+            </span>
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>settings_backup_restore</mat-icon>
+            <span>Log out</span>
+          </button>
+        </mat-menu>
+      </ng-container>
+    </mat-toolbar>
+  </div>
+</ng-container>
+
+<!-- Main content for routed components -->
+<router-outlet></router-outlet>

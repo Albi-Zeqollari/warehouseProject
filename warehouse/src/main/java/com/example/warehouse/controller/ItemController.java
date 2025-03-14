@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/manager/items")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ItemController {
 
 
@@ -30,13 +31,13 @@ public class ItemController {
     }
 
     @PutMapping("/{itemId}")
-    public void updateItem(@PathVariable String itemId, @RequestBody Item item) {
+    public void updateItem(@PathVariable Long itemId, @RequestBody Item item) {
         item.setId(itemId);
          itemService.updateItem(ItemDto.fromEntity(item));
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteItem(@PathVariable String itemId) {
+    public void deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
     }
 }

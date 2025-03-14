@@ -3,18 +3,20 @@ package com.example.warehouse.persistence.dtos;
 import com.example.warehouse.persistence.entity.Item;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ItemDto {
 
     private String name;
     private int quantity;
-    private double unitPrice;
+    private BigDecimal unitPrice;
 
     public Item toEntity() {
         Item item = new Item();
         item.setName(name);
         item.setQuantity(quantity);
-        item.setUnitPrice(unitPrice);
+        item.setUnitPrice((unitPrice));
         return item;
     }
 

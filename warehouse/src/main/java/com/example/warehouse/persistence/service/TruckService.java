@@ -13,5 +13,5 @@ public interface TruckService {
 
     void updateTruck(TruckDto truck);
 
-    void deleteTruck(String id);
+    void deleteTruck(Long id);
 }
