@@ -19,19 +19,17 @@ export class AppComponent {
         this.authService.getCurrentUser().subscribe({
           next: (res) => {
             this.currentUser = res;
-            console.log(this.currentUser);
-
           },
           error: (err: HttpErrorResponse) => {
             console.error('Failed to fetch current user:', err);
           }
         });
-
       }
     });
   }
 
     ngOnInit(): void {
+
     }
     logout(){
       this.authService.logout();

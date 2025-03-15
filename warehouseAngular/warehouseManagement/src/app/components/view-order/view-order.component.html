@@ -1,0 +1,57 @@
+<mat-card>
+  <mat-card-title>View Order</mat-card-title>
+  <form [formGroup]="viewOrderForm">
+    <div class="order-details">
+      <mat-form-field appearance="fill">
+        <mat-label>Order Number</mat-label>
+        <input matInput formControlName="orderNumber" readonly>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Submitted Date</mat-label>
+        <input matInput formControlName="submittedDate" readonly>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Status</mat-label>
+        <input matInput formControlName="status" readonly>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Deadline Date</mat-label>
+        <input matInput formControlName="deadlineDate" readonly>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Client Username</mat-label>
+        <input matInput formControlName="clientUsername" readonly>
+      </mat-form-field>
+    </div>
+
+    <div formArrayName="orderItems" class="order-items">
+      <h3>Order Items</h3>
+      <div *ngFor="let item of orderItems.controls; let i = index" [formGroupName]="i" class="order-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Item Name</mat-label>
+          <input matInput formControlName="itemName" readonly>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Available Quantity</mat-label>
+          <input matInput formControlName="availableQuantity" readonly>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Unit Price</mat-label>
+          <input matInput formControlName="unitPrice" readonly>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Requested Quantity</mat-label>
+          <input matInput formControlName="requestedQuantity" readonly>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="close()">Close</button>
+    </div>
+  </form>
+</mat-card>

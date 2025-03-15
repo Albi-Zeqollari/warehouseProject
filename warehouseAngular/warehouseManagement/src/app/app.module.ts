@@ -23,6 +23,17 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
+import { HomeComponent } from './components/home/home.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatDialogModule} from '@angular/material/dialog';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { CreateUserComponent } from './components/create-user/create-user.component';
+import { WarehouseComponent } from './components/warehouse/warehouse.component';
+import { ViewOrderComponent } from './components/view-order/view-order.component';
+import { ManageItemsComponent } from './components/manage-items/manage-items.component';
+import { CreateItemsComponent } from './components/create-items/create-items.component';
+import { EditItemComponent } from './components/edit-item/edit-item.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +43,14 @@ import {MatSelectModule} from '@angular/material/select';
     OrderComponent,
     CreateOrderComponent,
     TruckComponent,
-
+    HomeComponent,
+    EditUserComponent,
+    CreateUserComponent,
+    WarehouseComponent,
+    ViewOrderComponent,
+    ManageItemsComponent,
+    CreateItemsComponent,
+    EditItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,7 +68,9 @@ import {MatSelectModule} from '@angular/material/select';
     MatCardModule,
     MatNativeDateModule,
     MatTableModule,
-    MatSelectModule
+    MatSelectModule,
+    MatPaginatorModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

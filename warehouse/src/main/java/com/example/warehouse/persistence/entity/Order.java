@@ -1,5 +1,6 @@
 package com.example.warehouse.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -36,7 +37,8 @@ public class Order {
     @JoinColumn(name = "client_id")
     private User client;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true ,fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<OrderItem> orderItems = new ArrayList<>();
 
 }

@@ -1,11 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {  AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { OrderDto } from 'src/app/models/Dtos/OrderDto';
-import { UserDto } from 'src/app/models/Dtos/UserDto';
 import { Order } from 'src/app/models/order.interface';
-import { OrderStatus } from 'src/app/models/orderStatus.enum';
 import { User } from 'src/app/models/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrderService } from 'src/app/services/order.service';
@@ -58,12 +56,8 @@ export class OrderComponent  implements OnInit {
 
   }
 
-
-
-
   applyClientFilter(): void {
     this.filteredOrder = this.orders.filter(order =>
-      order.client.username === this.currentUser.username &&
       (this.filterStatus === 'All' || order.status === this.filterStatus)
     );
   }

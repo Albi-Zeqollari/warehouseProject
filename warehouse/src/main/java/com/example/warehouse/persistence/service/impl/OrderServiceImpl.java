@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,8 +52,8 @@ public class OrderServiceImpl implements OrderService {
         if (orderDto == null) {
             log.error("Order not found");
         }
-        if (orderDto.getStatus() == OrderStatus.CREATED || orderDto.getStatus() == OrderStatus.DECLINED) {
-            orderDto.setStatus(OrderStatus.AWAITING_APPROVAL);
+        if (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED")) {
+            orderDto.setStatus("AWAITING_APPROVAL");
             orderDto.setSubmittedDate(LocalDateTime.now());
             orderRepository.save(orderDto.toEntity());
         }
@@ -62,8 +63,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void approveOrder(Long orderId) {
         OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null && orderDto.getStatus() == OrderStatus.AWAITING_APPROVAL) {
-            orderDto.setStatus(OrderStatus.APPROVED);
+        if (orderDto != null && Objects.equals(orderDto.getStatus(), "AWAITING_APPROVAL")) {
+            orderDto.setStatus("APPROVED");
             orderRepository.save(orderDto.toEntity());
         }
     }
@@ -72,8 +73,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void declineOrder(Long orderId, String reason) {
         OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null && orderDto.getStatus() == OrderStatus.AWAITING_APPROVAL) {
-            orderDto.setStatus(OrderStatus.DECLINED);
+        if (orderDto != null && Objects.equals(orderDto.getStatus(), "AWAITING_APPROVAL")) {
+            orderDto.setStatus("DECLINED");
             orderDto.setDeclineReason(reason);
             orderRepository.save(orderDto.toEntity());
         }
@@ -84,10 +85,10 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(Long orderId) {
         OrderDto orderDto = getOrder(orderId);
         if (orderDto != null &&
-                orderDto.getStatus() != OrderStatus.FULFILLED &&
-                orderDto.getStatus() != OrderStatus.UNDER_DELIVERY &&
-                orderDto.getStatus() != OrderStatus.CANCELED) {
-            orderDto.setStatus(OrderStatus.CANCELED);
+                !Objects.equals(orderDto.getStatus(), "FULFILLED") &&
+                !Objects.equals(orderDto.getStatus(), "UNDER_DELIVERY") &&
+                !Objects.equals(orderDto.getStatus(), "CANCELED")) {
+            orderDto.setStatus("CANCELED");
             orderRepository.save(orderDto.toEntity());
         }
     }
@@ -96,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void scheduleDelivery(Long orderId, List<Truck> assignedTrucks) {
         OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null && orderDto.getStatus() == OrderStatus.APPROVED) {
+        if (orderDto != null && Objects.equals(orderDto.getStatus(), "APPROVED")) {
 
             for (OrderItem oi : orderDto.getOrderItems()) {
                 Item item = oi.getItem();
@@ -109,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
                 itemRepository.save(item);
             }
 
-            orderDto.setStatus(OrderStatus.UNDER_DELIVERY);
+            orderDto.setStatus("UNDER_DELIVERY");
             orderRepository.save(orderDto.toEntity());
         }
     }
@@ -118,8 +119,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void fulfillOrder(Long orderId) {
         OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null && orderDto.getStatus() == OrderStatus.UNDER_DELIVERY) {
-            orderDto.setStatus(OrderStatus.FULFILLED);
+        if (orderDto != null && Objects.equals(orderDto.getStatus(), "UNDER_DELIVERY")) {
+            orderDto.setStatus("FULFILLED");
             orderRepository.save(orderDto.toEntity());
         }
     }
@@ -127,18 +128,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<OrderDto> findAll() {
-        return orderRepository.findAll()
-                .stream().map(OrderDto::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public List<OrderDto> findByStatus(OrderStatus status) {
-        return orderRepository.findByStatus(status)
-                .stream().map(OrderDto::fromEntity)
-                .collect(Collectors.toList());
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+//                .stream().map(OrderDto::fromEntity)
+//                .collect(Collectors.toList());
     }
 
     @Override
@@ -153,7 +146,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void createOrder(OrderDto orderDto) {
-
         // Build the Order entity.
         Order order = new Order();
         order.setOrderNumber(generateOrderNumber());
@@ -176,6 +168,8 @@ public class OrderServiceImpl implements OrderService {
 
         orderRepository.save(order);
     }
+
+
 
 
     private String generateOrderNumber() {

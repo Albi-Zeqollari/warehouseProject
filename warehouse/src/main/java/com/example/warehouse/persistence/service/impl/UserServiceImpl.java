@@ -2,7 +2,6 @@ package com.example.warehouse.persistence.service.impl;
 
 
 import com.example.warehouse.persistence.dtos.UserDto;
-import com.example.warehouse.persistence.entity.Role;
 import com.example.warehouse.persistence.entity.User;
 import com.example.warehouse.persistence.repository.UserRepository;
 import com.example.warehouse.persistence.service.UserService;
@@ -13,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -43,8 +42,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(UserDto user) {
-        userRepository.save(user.toEntity());
+    public void updateUser(User userDto) {
+        userRepository.updateUserById(userDto.getUsername(),userDto.getRole(),userDto.getId());
     }
 
     @Override
@@ -55,11 +54,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(UserDto::fromEntity)
-                .collect(Collectors.toList());
+    public List<User> getAllUsers() {
+        return new ArrayList<>(userRepository.findAll());
     }
 
     @Override

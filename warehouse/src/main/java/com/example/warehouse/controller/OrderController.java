@@ -2,16 +2,20 @@ package com.example.warehouse.controller;
 
 
 import com.example.warehouse.persistence.dtos.OrderDto;
+import com.example.warehouse.persistence.entity.Order;
 import com.example.warehouse.persistence.entity.OrderItem;
 import com.example.warehouse.persistence.entity.OrderStatus;
 import com.example.warehouse.persistence.entity.Truck;
 import com.example.warehouse.persistence.service.OrderService;
 import com.example.warehouse.persistence.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -33,7 +37,7 @@ public class OrderController {
     @PutMapping("/client/orders/{orderId}/addItem")
     public OrderDto addItemToOrder(@PathVariable Long orderId, @RequestBody OrderItem orderItem) {
         OrderDto orderDto = orderService.getOrder(orderId);
-        if (orderDto != null && (orderDto.getStatus() == OrderStatus.CREATED || orderDto.getStatus() == OrderStatus.DECLINED)) {
+        if (orderDto != null && (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED"))) {
             orderDto.getOrderItems().add(orderItem);
             orderService.updateOrder(orderDto);
         }
@@ -43,8 +47,8 @@ public class OrderController {
     @PutMapping("/client/orders/{orderId}/removeItem/{orderItemId}")
     public void removeItemFromOrder(@PathVariable Long orderId, @PathVariable String orderItemId) {
         OrderDto orderDto = orderService.getOrder(orderId);
-        if (orderDto != null && (orderDto.getStatus() == OrderStatus.CREATED || orderDto.getStatus() == OrderStatus.DECLINED)) {
-            orderDto.getOrderItems().removeIf(item -> item.getId().equals(orderItemId));
+        if (orderDto != null && (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED"))) {
+            orderDto.getOrderItems().removeIf(item -> false);
             orderService.updateOrder(orderDto);
         }
     }
@@ -61,26 +65,15 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/client/my-orders")
-    public ResponseEntity<List<OrderDto>> viewMyOrders(@RequestParam Long id) {
-        List<OrderDto> orders;
-        if (id != null) {
-            orders = orderService.findByClient_Id(id);
-        } else {
-            orders = orderService.findAll();
-        }
+    @GetMapping("/client/my-orders/{id}")
+    public ResponseEntity<List<OrderDto>> viewMyOrders(@PathVariable Long id) {
+        List<OrderDto> orders = orderService.findByClient_Id(id);
         return ResponseEntity.ok(orders);
     }
 
-
     @GetMapping("/manager/orders")
-    public ResponseEntity<List<OrderDto>> getAllOrders(@RequestParam(required = false) OrderStatus status) {
-        List<OrderDto> orders;
-        if (status != null) {
-            orders = orderService.findByStatus(status);
-        } else {
-            orders = orderService.findAll();
-        }
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.findAll();
         return ResponseEntity.ok(orders);
     }
 

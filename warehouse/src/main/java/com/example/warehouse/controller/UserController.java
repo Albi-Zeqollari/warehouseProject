@@ -4,6 +4,7 @@ package com.example.warehouse.controller;
 import com.example.warehouse.persistence.dtos.UserDto;
 import com.example.warehouse.persistence.entity.User;
 import com.example.warehouse.persistence.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/system-admin/users")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -27,20 +28,20 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDto user) {
-         userService.createUser(user);
-         return ResponseEntity.ok("User created Successfully");
+        userService.createUser(user);
+        return ResponseEntity.ok("User created Successfully");
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
-         userService.updateUser(UserDto.fromEntity(user));
-         return ResponseEntity.ok("User Updated Successfully");
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+        log.info("User updated Successfully");
+        return ResponseEntity.ok("User Updated Successfully");
     }
 
     @DeleteMapping("/{id}")

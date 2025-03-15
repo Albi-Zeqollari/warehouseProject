@@ -1,0 +1,59 @@
+.order-container {
+  padding: 20px;
+
+  .management {
+    display: flex;
+    gap: 10px;
+    flex-direction: row-reverse;
+  }
+
+  button {
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  // Styling for the filter dropdown
+  .filter-select {
+    width: 200px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  // Material table styling
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+
+    th {
+      padding: 12px 15px;
+      background-color: #3f51b5;
+      color: #fff;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    td {
+      padding: 12px 15px;
+      font-size: 14px;
+      border-bottom: 1px solid #e0e0e0;
+
+      // Spacing for action buttons in the Actions column
+      button {
+        margin-right: 4px;
+      }
+    }
+
+    tr {
+      &:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      &:hover {
+        background-color: #f1f1f1;
+      }
+    }
+  }
+}

@@ -7,12 +7,13 @@ import lombok.Data;
 @Data
 public class UserDto {
 
+    private Long id;
 
     private String username;
 
     private String password;
 
-    private Role role;
+    private String role;
 
     public User toEntity() {
         User user = new User();

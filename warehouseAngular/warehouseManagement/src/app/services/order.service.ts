@@ -2,12 +2,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OrderItem } from '../models/orderItem.inteface';
-import { OrderStatus } from '../models/orderStatus.enum';
 import { Truck } from '../models/truck.interface';
 import { OrderDto } from '../models/Dtos/OrderDto';
-import { environment } from 'src/assets/enviroment';
-import { User } from '../models/user.interface';
-import { UserDto } from '../models/Dtos/UserDto';
+import { environment } from 'src/assets/enviroment';;
 import { Order } from '../models/order.interface';
 
 @Injectable({
@@ -18,8 +15,6 @@ export class OrderService {
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
-
-
 
   createOrder(order: Order): Observable<void> {
 
@@ -59,25 +54,25 @@ export class OrderService {
 
 
   viewMyOrders(id: number): Observable<OrderDto[]> {
-    const url = `${this.baseUrl}/api/client/my-orders`;
-    let params = new HttpParams().set('username', id);
+    const url = `${this.baseUrl}/api/client/my-orders/${id}`;
     const token = localStorage.getItem('token');
     let headers = new HttpHeaders();
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
 
-    return this.http.get<OrderDto[]>(url, { params, headers });
+    return this.http.get<OrderDto[]>(url, { headers });
   }
 
 
-  getAllOrdersForManager(status?: OrderStatus): Observable<OrderDto[]> {
-    const url = `${this.baseUrl}/manager/orders`;
-    let params = new HttpParams();
-    if (status) {
-      params = params.set('status', status);
+  getAllOrdersForManager(): Observable<OrderDto[]> {
+    const url = `${this.baseUrl}/api/manager/orders`;
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
     }
-    return this.http.get<OrderDto[]>(url, { params });
+    return this.http.get<OrderDto[]>(url, { headers });
   }
 
 

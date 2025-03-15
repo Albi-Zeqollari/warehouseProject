@@ -1,0 +1,44 @@
+/* Styling for the table container */
+.user-table-container {
+  padding: 20px;
+
+}
+button {
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+
+/* Styling for the MatTable */
+table.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Add some space between the table headers */
+th.mat-header-cell {
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+}
+
+/* Add some space between the table cells */
+td.mat-cell {
+  padding: 12px 20px;
+}
+
+/* Styling for the action buttons in the last column */
+button.mat-icon-button {
+  margin-right: 8px;
+}
+
+/* Optional: Add some hover effect to rows */
+tr.mat-row:hover {
+  background-color: #f1f1f1;
+}
+
+/* Optional: Add border to the table */
+table.mat-table, th.mat-header-cell, td.mat-cell {
+  border: 1px solid #ddd;
+}

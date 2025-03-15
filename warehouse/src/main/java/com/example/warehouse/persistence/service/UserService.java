@@ -10,11 +10,11 @@ public interface UserService {
 
     ResponseEntity<?> createUser(UserDto user);
 
-    void updateUser(UserDto user);
+    void updateUser(User userDto);
 
     void deleteUser(Long userId);
 
-    List<UserDto> getAllUsers();
+    List<User> getAllUsers();
 
     User findByUsername(String username);
 

@@ -28,11 +28,10 @@ export class LoginComponent implements OnInit  {
 
     if (this.loginForm.valid) {
       const { username, password } = this.loginForm.value;
-
       console.log('Logging in with', { username, password });
        this.authService.login(username, password).subscribe(response=>{
         if(response){
-          this.router.navigateByUrl("/orders")
+          this.router.navigateByUrl("/home")
         }
        })
     } else {

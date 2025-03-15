@@ -1,0 +1,27 @@
+<div *ngIf="currentUser">
+  <div *ngIf="currentUser.role == 'SYSTEM_ADMIN'">
+    <h2>Welcome, System Admin!</h2>
+    <p>As a System Admin, you have full access to manage all system configurations and users.</p>
+    <!-- Material Button for System Admin -->
+    <button mat-raised-button color="primary" (click)="goToAdminDashboard()">Go to Admin Dashboard</button>
+  </div>
+
+  <div *ngIf="currentUser.role == 'WAREHOUSE_MANAGER'">
+    <h2>Welcome, Warehouse Management!</h2>
+    <p>As a Warehouse Manager, you can manage inventory, process orders, and monitor warehouse status.</p>
+    <!-- Material Button for Warehouse Management -->
+    <button mat-raised-button color="accent" (click)="goToWarehouseDashboard()">Go to Warehouse Dashboard</button>
+  </div>
+
+  <div *ngIf="currentUser.role == 'CLIENT'">
+    <h2>Welcome, Client!</h2>
+    <p>As a Client, you can view your orders, track shipments, and update your profile.</p>
+    <!-- Material Button for Client -->
+    <button mat-raised-button color="warn" (click)="goToClientDashboard()">Go to Client Dashboard</button>
+  </div>
+</div>
+
+<!-- Fallback message if no user is logged in -->
+<div *ngIf="!currentUser">
+  <p>Please log in to see the content based on your role.</p>
+</div>

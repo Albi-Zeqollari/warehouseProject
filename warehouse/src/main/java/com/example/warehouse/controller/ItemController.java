@@ -26,14 +26,13 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItems() {
+    public List<Item> getAllItems() {
         return itemService.getAllItems();
     }
 
-    @PutMapping("/{itemId}")
-    public void updateItem(@PathVariable Long itemId, @RequestBody Item item) {
-        item.setId(itemId);
-         itemService.updateItem(ItemDto.fromEntity(item));
+    @PutMapping("/update")
+    public void updateItem(@RequestBody Item itemDto) {
+         itemService.updateItem((itemDto));
     }
 
     @DeleteMapping("/{itemId}")

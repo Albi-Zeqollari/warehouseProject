@@ -2,6 +2,7 @@ package com.example.warehouse.persistence.service;
 
 import com.example.warehouse.persistence.dtos.OrderDto;
 import com.example.warehouse.persistence.dtos.UserDto;
+import com.example.warehouse.persistence.entity.Order;
 import com.example.warehouse.persistence.entity.OrderStatus;
 import com.example.warehouse.persistence.entity.Truck;
 import com.example.warehouse.persistence.entity.User;
@@ -26,9 +27,7 @@ public interface OrderService {
 
     void fulfillOrder(Long orderId);
 
-    List<OrderDto> findAll();
-
-    List<OrderDto> findByStatus(OrderStatus status);
+    List<Order> findAll();
 
     List<OrderDto> findByClient_Id(Long id);
 

@@ -4,6 +4,7 @@ import com.example.warehouse.persistence.entity.Order;
 import com.example.warehouse.persistence.entity.OrderItem;
 import com.example.warehouse.persistence.entity.OrderStatus;
 import com.example.warehouse.persistence.entity.User;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public class OrderDto {
 
     private LocalDateTime submittedDate;
 
-    private OrderStatus status;
+    private String status;
 
     private LocalDate deadlineDate;
 
@@ -32,7 +33,7 @@ public class OrderDto {
         OrderDto dto = new OrderDto();
         dto.setOrderNumber(order.getOrderNumber());
         dto.setSubmittedDate(order.getSubmittedDate());
-        dto.setStatus(OrderStatus.valueOf(order.getStatus()));
+        dto.setStatus(order.getStatus());
         dto.setDeadlineDate(order.getDeadlineDate());
         dto.setOrderItems(order.getOrderItems());
         dto.setClient(order.getClient());
@@ -51,6 +52,4 @@ public class OrderDto {
         order.setDeclineReason(getDeclineReason());
         return order;
     }
-
-
 }

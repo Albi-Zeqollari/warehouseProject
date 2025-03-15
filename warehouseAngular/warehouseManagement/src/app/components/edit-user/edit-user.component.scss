@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  padding: 16px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  // Styling the dialog title
+  h2[mat-dialog-title] {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  // Ensure the form takes up full width in the dialog content
+  mat-dialog-content {
+    padding: 0 16px;
+    margin-bottom: 16px;
+
+    form {
+      display: flex;
+      flex-direction: column;
+
+      // Style all mat-form-fields consistently
+      mat-form-field {
+        width: 100%;
+        margin-bottom: 16px;
+      }
+    }
+  }
+
+  // Align the dialog actions to the right and add spacing between buttons
+  mat-dialog-actions {
+    padding: 0 16px 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+
+    button {
+      min-width: 80px;
+    }
+  }
+}

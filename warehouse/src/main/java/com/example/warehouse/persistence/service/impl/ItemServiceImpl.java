@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,18 +30,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public List<ItemDto> getAllItems() {
-        return itemRepository
-                .findAll()
-                .stream()
-                .map(ItemDto::fromEntity)
-                .collect(Collectors.toList());
+    public List<Item> getAllItems() {
+        return new ArrayList<>(itemRepository.findAll());
     }
 
 
     @Transactional
-    public void updateItem(ItemDto itemDto) {
-         itemRepository.save(itemDto.toEntity());
+    public void updateItem(Item item) {
+         itemRepository.updateItemById(item.getName(), item.getQuantity(), item.getUnitPrice());
     }
 
     @Override
