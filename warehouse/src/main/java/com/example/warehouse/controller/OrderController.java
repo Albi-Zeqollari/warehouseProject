@@ -34,24 +34,30 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/client/orders/{orderId}/addItem")
-    public OrderDto addItemToOrder(@PathVariable Long orderId, @RequestBody OrderItem orderItem) {
-        OrderDto orderDto = orderService.getOrder(orderId);
-        if (orderDto != null && (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED"))) {
-            orderDto.getOrderItems().add(orderItem);
-            orderService.updateOrder(orderDto);
-        }
-        return orderDto;
+    @PutMapping("/order/updateStatus")
+    public ResponseEntity<Void> updateOrder(@RequestBody Order orderDto) {
+        orderService.updateOrder(orderDto);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/client/orders/{orderId}/removeItem/{orderItemId}")
-    public void removeItemFromOrder(@PathVariable Long orderId, @PathVariable String orderItemId) {
-        OrderDto orderDto = orderService.getOrder(orderId);
-        if (orderDto != null && (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED"))) {
-            orderDto.getOrderItems().removeIf(item -> false);
-            orderService.updateOrder(orderDto);
-        }
-    }
+//    @PutMapping("/client/orders/{orderId}/addItem")
+//    public OrderDto addItemToOrder(@PathVariable Long orderId, @RequestBody OrderItem orderItem) {
+//        OrderDto orderDto = orderService.getOrder(orderId);
+//        if (orderDto != null && (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED"))) {
+//            orderDto.getOrderItems().add(orderItem);
+//            orderService.updateOrder(orderDto);
+//        }
+//        return orderDto;
+//    }
+//
+//    @PutMapping("/client/orders/{orderId}/removeItem/{orderItemId}")
+//    public void removeItemFromOrder(@PathVariable Long orderId, @PathVariable String orderItemId) {
+//        OrderDto orderDto = orderService.getOrder(orderId);
+//        if (orderDto != null && (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED"))) {
+//            orderDto.getOrderItems().removeIf(item -> false);
+//            orderService.updateOrder(orderDto);
+//        }
+//    }
 
     @PutMapping("/client/orders/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId) {

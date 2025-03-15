@@ -59,5 +59,9 @@ export class ManageItemsComponent implements OnInit {
       }
     });
   }
-  deleteItem(item: any) {}
+  deleteItem(item: any) {
+  this.itemService.deleteItem(item.id).subscribe(()=>{
+    this.loadItems()
+  })
+  }
 }

@@ -41,8 +41,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void updateOrder(OrderDto orderDto) {
-        orderRepository.save(orderDto.toEntity());
+    public void updateOrder(Order orderDto) {
+        orderRepository.updateOrderStatusById(orderDto.getStatus(), orderDto.getId());
     }
 
     @Override
@@ -130,8 +130,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public List<Order> findAll() {
         return orderRepository.findAll();
-//                .stream().map(OrderDto::fromEntity)
-//                .collect(Collectors.toList());
+
     }
 
     @Override
@@ -161,7 +160,7 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setItem(orderItemDto.getItem());
             orderItem.setRequestedQuantity(orderItemDto.getRequestedQuantity());
-            orderItem.setOrder(order);
+//            orderItem.setOrder(order);
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);

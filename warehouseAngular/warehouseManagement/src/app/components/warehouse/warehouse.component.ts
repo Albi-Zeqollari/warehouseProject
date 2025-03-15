@@ -57,6 +57,8 @@ export class WarehouseComponent implements OnInit {
       .subscribe({
         next: (orders: any[]) => {
           this.orders = orders;
+          console.log(orders);
+
           this.applyClientFilter();
         },
         error: (err: HttpErrorResponse) => {

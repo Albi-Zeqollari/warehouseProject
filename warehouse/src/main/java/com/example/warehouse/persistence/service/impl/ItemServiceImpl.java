@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public void updateItem(Item item) {
-         itemRepository.updateItemById(item.getName(), item.getQuantity(), item.getUnitPrice());
+         itemRepository.updateItemById(item.getName(), item.getQuantity(), item.getUnitPrice(),item.getId());
     }
 
     @Override

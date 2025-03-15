@@ -70,7 +70,7 @@ import { EditItemComponent } from './components/edit-item/edit-item.component';
     MatTableModule,
     MatSelectModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

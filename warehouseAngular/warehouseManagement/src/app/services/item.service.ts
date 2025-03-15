@@ -33,4 +33,16 @@ export class ItemService {
 
     return this.http.post<void>(url, item, { headers });
   }
+
+
+  deleteItem(id: number) {
+    const token = localStorage.getItem('token');
+    const url = `${this.baseUrl}/api/manager/items/${id}`;
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return this.http.delete(url, { headers, responseType: 'text' });
+  }
+
 }

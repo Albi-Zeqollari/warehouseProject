@@ -30,7 +30,7 @@ export class UserComponent implements OnInit {
   }
   editUser(user: any): void {
     const dialogRef = this.dialog.open(EditUserComponent, {
-      data: user, // Pass the entire user object (including id) to the dialog
+      data: user,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -49,10 +49,8 @@ export class UserComponent implements OnInit {
   }
 
   deleteUser(userId: number): void {
-    this.authService.deleteUser(userId).subscribe(res=>{
-      if(res){
+    this.authService.deleteUser(userId).subscribe(()=>{
         this.getAllUsers()
-      }
     })
   }
 }

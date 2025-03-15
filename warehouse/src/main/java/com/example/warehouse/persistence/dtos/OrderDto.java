@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 public class OrderDto {
 
+    private  Long id;
+
     private String orderNumber;
 
     private LocalDateTime submittedDate;
@@ -34,6 +36,7 @@ public class OrderDto {
         dto.setOrderNumber(order.getOrderNumber());
         dto.setSubmittedDate(order.getSubmittedDate());
         dto.setStatus(order.getStatus());
+        dto.setId(order.getId());
         dto.setDeadlineDate(order.getDeadlineDate());
         dto.setOrderItems(order.getOrderItems());
         dto.setClient(order.getClient());
@@ -47,6 +50,7 @@ public class OrderDto {
         order.setSubmittedDate(getSubmittedDate());
         order.setStatus(String.valueOf(getStatus()));
         order.setDeadlineDate(getDeadlineDate());
+        order.setId(getId());
         order.setOrderItems(getOrderItems());
         order.setClient(getClient());
         order.setDeclineReason(getDeclineReason());

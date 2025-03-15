@@ -13,7 +13,7 @@ public interface OrderService {
 
     OrderDto getOrder(Long orderId);
 
-    void updateOrder(OrderDto orderDto);
+    void updateOrder(Order orderDto);
 
     void submitOrder(Long orderId);
 
