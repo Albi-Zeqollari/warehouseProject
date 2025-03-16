@@ -1,0 +1,35 @@
+<div class="create-item-container">
+  <mat-card>
+    <mat-card-title>Create New Truck</mat-card-title>
+    <mat-card-subtitle>Fill out the form to add a new truck</mat-card-subtitle>
+
+    <mat-card-content>
+      <form [formGroup]="createTruckForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="outline">
+          <mat-label>License Plate</mat-label>
+          <input matInput formControlName="licensePlate" />
+          <mat-error *ngIf="createTruckForm.get('licensePlate')?.hasError('required')">
+            License Plate is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Chassis Number</mat-label>
+          <input matInput formControlName="chassisNumber" />
+          <mat-error *ngIf="createTruckForm.get('chassisNumber')?.hasError('required')">
+            Chassis Number is required.
+          </mat-error>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="createTruckForm.invalid">
+            Create
+          </button>
+          <button mat-raised-button color="warn" type="button" (click)="onCancel()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

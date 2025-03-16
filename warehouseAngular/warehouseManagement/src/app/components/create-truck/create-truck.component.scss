@@ -1,0 +1,77 @@
+.create-item-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #f3f3f3, #fafafa);
+
+  mat-card {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+    padding: 25px;
+
+    mat-card-title {
+      font-size: 24px;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    mat-card-subtitle {
+      display: block;
+      text-align: center;
+      margin-bottom: 16px;
+      color: #666;
+    }
+
+    mat-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 16px;
+
+    button {
+      transition: transform 0.2s ease;
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  /* Make the outlined form fields more pronounced */
+  mat-form-field {
+    width: 100%;
+
+    &.mat-form-field-appearance-outline {
+      .mat-form-field-wrapper {
+        .mat-form-field-outline {
+          .mat-form-field-outline-start,
+          .mat-form-field-outline-end {
+            border-width: 2px; /* Increase border thickness */
+            border-color: #444; /* Darker border color for a firmer look */
+          }
+        }
+
+        .mat-form-field-outline-gap {
+          border-width: 2px; /* Matches the outline thickness */
+          border-color: #444;
+        }
+      }
+
+      .mat-form-field-label-wrapper {
+        color: #333; /* Darker label color */
+        font-weight: 500; /* Slightly bolder label */
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@
 
   <table
     mat-table
-    [dataSource]="filteredOrder"
+    [dataSource]="dataSource"
     class="mat-elevation-z8"
     style="margin-top: 20px; width: 100%;"
   >
@@ -37,11 +37,11 @@
       <th mat-header-cell *matHeaderCellDef> Status </th>
       <td mat-cell *matCellDef="let order"> {{ order.status }} </td>
     </ng-container>
-
+<!--
     <ng-container matColumnDef="deadlineDate">
       <th mat-header-cell *matHeaderCellDef> Deadline Date </th>
       <td mat-cell *matCellDef="let order"> {{ order.deadlineDate | date: 'short' }} </td>
-    </ng-container>
+    </ng-container> -->
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>

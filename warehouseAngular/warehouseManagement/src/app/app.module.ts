@@ -33,7 +33,11 @@ import { ManageItemsComponent } from './components/manage-items/manage-items.com
 import { CreateItemsComponent } from './components/create-items/create-items.component';
 import { EditItemComponent } from './components/edit-item/edit-item.component';
 import { EditOrderComponent } from './components/edit-order/edit-order.component';
-
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { NotfoundComponent } from './components/notfound/notfound.component';
+import { ManageTrucksComponent } from './components/manage-trucks/manage-trucks.component';
+import { EditTruckComponent } from './components/edit-truck/edit-truck.component';
+import { CreateTruckComponent } from './components/create-truck/create-truck.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +56,10 @@ import { EditOrderComponent } from './components/edit-order/edit-order.component
     CreateItemsComponent,
     EditItemComponent,
     EditOrderComponent,
+    NotfoundComponent,
+    ManageTrucksComponent,
+    EditTruckComponent,
+    CreateTruckComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,7 +80,7 @@ import { EditOrderComponent } from './components/edit-order/edit-order.component
     MatSelectModule,
     MatPaginatorModule,
     MatDialogModule,
-
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

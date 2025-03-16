@@ -25,14 +25,13 @@ public class TruckController {
     }
 
     @GetMapping
-    public List<TruckDto> getAllTrucks() {
+    public List<Truck> getAllTrucks() {
         return truckService.getAllTrucks();
     }
 
-    @PutMapping("/{truckId}")
-    public void updateTruck(@PathVariable Long truckId, @RequestBody Truck truck) {
-        truck.setId(truckId);
-        truckService.updateTruck(TruckDto.fromEntity(truck));
+    @PutMapping("/updateTruck")
+    public void updateTruck(@RequestBody Truck truck) {
+        truckService.updateTruck(truck);
     }
 
     @DeleteMapping("/{truckId}")

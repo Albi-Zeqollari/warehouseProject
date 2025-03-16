@@ -22,7 +22,6 @@ export class AuthGuard implements CanActivate {
         if (!user) {
           return false;
         }
-
         const allowedRoles = route.data['roles'] as Array<string>;
         if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
           this.location.back();

@@ -12,6 +12,9 @@ import { WarehouseComponent } from './components/warehouse/warehouse.component';
 import { ManageItemsComponent } from './components/manage-items/manage-items.component';
 import { CreateItemsComponent } from './components/create-items/create-items.component';
 import { EditOrderComponent } from './components/edit-order/edit-order.component';
+import { NotfoundComponent } from './components/notfound/notfound.component';
+import { ManageTrucksComponent } from './components/manage-trucks/manage-trucks.component';
+import { CreateTruckComponent } from './components/create-truck/create-truck.component';
 
 
 export const routes: Routes = [
@@ -73,14 +76,27 @@ export const routes: Routes = [
       data: { roles: ['WAREHOUSE_MANAGER'] }
     },
     {
+      path: 'manage-trucks',
+      component: ManageTrucksComponent,
+      canActivate: [AuthGuard],
+      data: { roles: ['WAREHOUSE_MANAGER'] }
+    },
+    {
+      path: 'create-trucks',
+      component: CreateTruckComponent,
+      canActivate: [AuthGuard],
+      data: { roles: ['WAREHOUSE_MANAGER'] }
+    },
+    {
       path: 'create-items',
       component: CreateItemsComponent,
       canActivate: [AuthGuard],
       data: { roles: ['WAREHOUSE_MANAGER'] }
     },
+    {path:"notfound",component:NotfoundComponent},
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/notfound' }
 ];
 
 

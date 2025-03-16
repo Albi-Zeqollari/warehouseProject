@@ -1,0 +1,11 @@
+<mat-card class="not-found-card">
+  <mat-card-content>
+    <div class="not-found-container">
+      <h1>404</h1>
+      <p>Oops! The page you’re looking for does not exist.</p>
+    </div>
+  </mat-card-content>
+  <mat-card-actions >
+    <button mat-button color="basic" [routerLink]="['/']"    (click)="goBack()">Go Back</button>
+  </mat-card-actions>
+</mat-card>

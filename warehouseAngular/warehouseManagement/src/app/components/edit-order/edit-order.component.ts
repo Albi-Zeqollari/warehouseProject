@@ -1,26 +1,30 @@
 import { OrderItem } from './../../models/orderItem.inteface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Item } from 'src/app/models/item.interface';
 import { ItemService } from 'src/app/services/item.service';
 import { OrderService } from 'src/app/services/order.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-order',
   templateUrl: './edit-order.component.html',
   styleUrls: ['./edit-order.component.scss']
 })
-export class EditOrderComponent implements OnInit {
+export class EditOrderComponent implements OnInit, OnDestroy {
   editOrderForm!: FormGroup;
   availableItems: Item[] = [];
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private orderService: OrderService,
-    private itemService: ItemService
+    private itemService: ItemService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -34,16 +38,23 @@ export class EditOrderComponent implements OnInit {
 
     const orderId = Number(this.route.snapshot.paramMap.get('id'));
     if (orderId && !isNaN(orderId)) {
-      this.orderService.findOrderById(orderId).subscribe(order => {
+      const orderSub = this.orderService.findOrderById(orderId).subscribe(order => {
         this.populateForm(order);
       });
+      this.subscriptions.add(orderSub);
     }
   }
 
-  loadAvailableItems() {
-    this.itemService.getAllItems().subscribe(items => {
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions to prevent memory leaks.
+    this.subscriptions.unsubscribe();
+  }
+
+  loadAvailableItems(): void {
+    const itemsSub = this.itemService.getAllItems().subscribe(items => {
       this.availableItems = items;
     });
+    this.subscriptions.add(itemsSub);
   }
 
   populateForm(order: any): void {
@@ -85,7 +96,7 @@ export class EditOrderComponent implements OnInit {
     if (this.orderItems.length > 1) {
       this.orderItems.removeAt(index);
     } else {
-      alert('Order must have at least one item.');
+      this.snackBar.open('Order must have at least one item.', 'Close', { duration: 3000 });
     }
   }
 
@@ -101,13 +112,19 @@ export class EditOrderComponent implements OnInit {
 
       console.log(orderItemsPayload);
 
-
-      this.orderService.updateOrderItems(orderData.id,orderItemsPayload).subscribe(() => {
-        alert('Order updated successfully.');
-        this.router.navigate(['/orders']);
+      const updateSub = this.orderService.updateOrderItems(orderData.id, orderItemsPayload).subscribe({
+        next: () => {
+          this.snackBar.open('Order updated successfully.', 'Close', { duration: 3000 });
+          this.router.navigate(['/orders']);
+        },
+        error: (err) => {
+          console.error('Failed to update order:', err);
+          this.snackBar.open('Failed to update order.', 'Close', { duration: 3000 });
+        }
       });
+      this.subscriptions.add(updateSub);
     } else {
-      alert('Please correct the form. Order items cannot be empty.');
+      this.snackBar.open('Please correct the form. Order items cannot be empty.', 'Close', { duration: 3000 });
     }
   }
 

@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Item } from 'src/app/models/item.interface';
 import { ItemService } from 'src/app/services/item.service';
 
 @Component({
   selector: 'app-create-items',
   templateUrl: './create-items.component.html',
-  styleUrls: ['./create-items.component.scss']
+  styleUrls: ['./create-items.component.scss'],
 })
-export class CreateItemsComponent  implements OnInit{
-
+export class CreateItemsComponent implements OnInit, OnDestroy {
   createItemForm!: FormGroup;
+  private subscription: Subscription = new Subscription();
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private itemService:ItemService
+    private itemService: ItemService
   ) {}
 
   ngOnInit(): void {
@@ -29,17 +31,24 @@ export class CreateItemsComponent  implements OnInit{
   onSubmit(): void {
     if (this.createItemForm.valid) {
       const newItem: Item = this.createItemForm.value;
-      this.itemService.createItem(newItem).subscribe(res=>{
-        this.goToItems()
-      })
-
+      const createItemSub = this.itemService
+        .createItem(newItem)
+        .subscribe(() => {
+          this.goToItems();
+        });
+      this.subscription.add(createItemSub);
     }
   }
-  goToItems(){
-    this.router.navigateByUrl("manage-items")
+
+  goToItems(): void {
+    this.router.navigateByUrl('manage-items');
   }
 
   onCancel(): void {
-  this.goToItems()
+    this.goToItems();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -1,26 +1,25 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-view-order',
   templateUrl: './view-order.component.html',
   styleUrls: ['./view-order.component.scss']
 })
-export class ViewOrderComponent implements OnInit {
-
+export class ViewOrderComponent implements OnInit, OnDestroy {
   viewOrderForm!: FormGroup;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<ViewOrderComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private authService: AuthService
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    // 1. Initialize the form with an orderItems FormArray.
     this.viewOrderForm = this.fb.group({
       orderNumber: [{ value: '', disabled: true }],
       submittedDate: [{ value: '', disabled: true }],
@@ -28,17 +27,14 @@ export class ViewOrderComponent implements OnInit {
       deadlineDate: [{ value: '', disabled: true }],
       declineReason: [{ value: '', disabled: true }],
       clientUsername: [{ value: '', disabled: true }],
-
       orderItems: this.fb.array([])
     });
-
 
     if (this.data) {
       this.populateForm(this.data);
     }
   }
 
-  // Getter for easy access to the orderItems FormArray
   get orderItems(): FormArray {
     return this.viewOrderForm.get('orderItems') as FormArray;
   }
@@ -52,13 +48,9 @@ export class ViewOrderComponent implements OnInit {
       declineReason: order.declineReason,
       clientUsername: order.client?.username
     });
-
-    // Clear any existing items, just in case
     this.orderItems.clear();
-
     if (order.orderItems && Array.isArray(order.orderItems)) {
       order.orderItems.forEach((item: any) => {
-        // Push a new FormGroup for each order item
         this.orderItems.push(
           this.fb.group({
             itemName: [{ value: item.item?.name, disabled: true }],
@@ -73,5 +65,9 @@ export class ViewOrderComponent implements OnInit {
 
   close(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

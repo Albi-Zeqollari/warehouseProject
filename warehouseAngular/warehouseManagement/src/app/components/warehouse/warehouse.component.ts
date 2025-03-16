@@ -1,5 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { OrderDto } from 'src/app/models/Dtos/OrderDto';
 import { Order } from 'src/app/models/order.interface';
@@ -11,20 +18,20 @@ import { ViewOrderComponent } from '../view-order/view-order.component';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-warehouse',
   templateUrl: './warehouse.component.html',
   styleUrls: ['./warehouse.component.scss'],
 })
-export class WarehouseComponent implements OnInit,AfterViewInit {
+export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
   currentUser!: User;
   orders: any[] = [];
   filterStatus: string = 'All';
   filteredOrder!: OrderDto[];
   readonly dialog = inject(MatDialog);
   declineReasonVisibleId: number | null = null;
-  // A map of FormControls for each order's decline reason
   declineReasonControlMap: { [orderId: number]: FormControl } = {};
   displayedColumns: string[] = [
     'orderNumber',
@@ -34,8 +41,9 @@ export class WarehouseComponent implements OnInit,AfterViewInit {
     'client',
     'actions',
   ];
-    dataSource = new MatTableDataSource<Order>(this.orders);
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
+  dataSource = new MatTableDataSource<any>(this.orders);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private router: Router,
@@ -44,38 +52,39 @@ export class WarehouseComponent implements OnInit,AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe({
+    const userSub = this.authService.getCurrentUser().subscribe({
       next: (user: User) => {
         this.currentUser = user;
         this.loadManagerOrders();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Failed to fetch current user:', err);
-      }
+      },
     });
+    this.subscriptions.add(userSub);
   }
-  ngAfterViewInit(){
+
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
-
-  loadManagerOrders(){
-    this.orderService.getAllOrdersForManager().subscribe({
-      next: (orders: OrderDto[]) => {
+  loadManagerOrders(): void {
+    const ordersSub = this.orderService.getAllOrdersForManager().subscribe({
+      next: (orders: any[]) => {
         this.orders = orders;
-        this.dataSource.data = this.orders
         this.applyClientFilter();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Failed to fetch orders:', err);
-      }
+      },
     });
+    this.subscriptions.add(ordersSub);
   }
 
   applyClientFilter(): void {
     this.filteredOrder = this.orders
       .filter(
-        (order) =>
+        (order: any) =>
           this.filterStatus === 'All' || order.status === this.filterStatus
       )
       .sort(
@@ -83,6 +92,7 @@ export class WarehouseComponent implements OnInit,AfterViewInit {
           new Date(b.submittedDate!).getTime() -
           new Date(a.submittedDate!).getTime()
       );
+    this.dataSource.data = this.filteredOrder;
   }
 
   viewOrder(order: Order): void {
@@ -90,19 +100,22 @@ export class WarehouseComponent implements OnInit,AfterViewInit {
       data: order,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    const dialogSub = dialogRef.afterClosed().subscribe(() => {
+    });
+    this.subscriptions.add(dialogSub);
   }
 
   approveOrder(order: Order): void {
-    order.status = "APPROVED";
-    this.orderService.changeOrderStatus(order).subscribe({
+    order.status = 'APPROVED';
+    const approveSub = this.orderService.changeOrderStatus(order).subscribe({
       next: () => {
         this.loadManagerOrders();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Failed to change order status:', err);
-      }
+      },
     });
+    this.subscriptions.add(approveSub);
   }
 
   getDeclineReasonControl(orderId: number): FormControl {
@@ -128,13 +141,23 @@ export class WarehouseComponent implements OnInit,AfterViewInit {
     order.status = 'DECLINED';
     order.declineReason = typedReason;
 
-    this.orderService.changeOrderStatus(order).subscribe(() => {
+    const declineSub = this.orderService.changeOrderStatus(order).subscribe(() => {
       this.loadManagerOrders();
     });
+    this.subscriptions.add(declineSub);
 
     this.declineReasonVisibleId = null;
   }
-  goToItems(){
-    this.router.navigateByUrl("manage-items")
+
+  goToItems(): void {
+    this.router.navigateByUrl('manage-items');
+  }
+
+  goToTrucks(){
+    this.router.navigateByUrl('manage-trucks');
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

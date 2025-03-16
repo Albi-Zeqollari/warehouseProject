@@ -130,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void createOrder(OrderDto orderDto) {
-        // Build the Order entity.
+
         Order order = new Order();
         order.setOrderNumber(generateOrderNumber());
         order.setSubmittedDate(orderDto.getSubmittedDate());
@@ -140,7 +140,6 @@ public class OrderServiceImpl implements OrderService {
         order.setClient(orderDto.getClient());
         order.setId(orderDto.getId());
 
-        // Process each order item.
         List<OrderItem> orderItems = new ArrayList<>();
         for (OrderItem orderItemDto : orderDto.getOrderItems()) {
             OrderItem orderItem = new OrderItem();

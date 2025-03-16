@@ -1,7 +1,6 @@
-<!-- app.component.html -->
+
 <ng-container *ngIf="!isLoginRoute()">
   <div>
-    <!-- Persistent Menu (appears only once) -->
     <mat-toolbar color="primary">
       <span>Warehouse Management</span>
       <span class="spacer"></span>
@@ -13,7 +12,7 @@
         <mat-menu #menu="matMenu">
           <button mat-menu-item>
             <span class="logged-in-info">
-              Logged in as {{ currentUser.role | lowercase }}
+              Logged in as {{ currentUser.role}}
             </span>
           </button>
           <button mat-menu-item>
@@ -31,6 +30,4 @@
     </mat-toolbar>
   </div>
 </ng-container>
-
-<!-- Main content for routed components -->
 <router-outlet></router-outlet>

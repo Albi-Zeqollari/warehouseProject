@@ -29,7 +29,6 @@ export class AppComponent {
   }
 
     ngOnInit(): void {
-
     }
     logout(){
       this.authService.logout();

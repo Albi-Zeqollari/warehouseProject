@@ -1,0 +1,39 @@
+.manage-trucks-container {
+  margin: 40px auto;
+  padding: 16px;
+  border-radius: 8px;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .create-truck-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    background: #fff;
+    border-radius: 8px;
+
+    mat-form-field {
+      width: 200px;
+    }
+  }
+
+  table {
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+
+    th.mat-header-cell, td.mat-cell {
+      text-align: center;
+    }
+
+    th.mat-header-cell {
+      font-weight: bold;
+    }
+  }
+}

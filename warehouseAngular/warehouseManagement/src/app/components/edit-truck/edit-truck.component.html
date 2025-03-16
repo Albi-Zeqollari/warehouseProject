@@ -1,0 +1,38 @@
+<mat-card >
+  <mat-card-header>
+    <mat-card-title>Edit Truck</mat-card-title>
+    <mat-card-subtitle>Update the fields below to modify the truck</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="editTruckForm">
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>License Plate</mat-label>
+          <input matInput formControlName="licensePlate" />
+          <mat-error *ngIf="editTruckForm.get('licensePlate')?.hasError('required')">
+            License Plate is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Chassis Number</mat-label>
+          <input matInput formControlName="chassisNumber" />
+          <mat-error *ngIf="editTruckForm.get('chassisNumber')?.hasError('required')">
+            Chassis Number is required.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSave()"
+      [disabled]="editTruckForm.invalid"
+    >
+      Save
+    </button>
+  </mat-card-actions>
+</mat-card>

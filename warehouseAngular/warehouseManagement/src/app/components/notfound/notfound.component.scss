@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; // Full viewport height to center vertically
+}
+
+.not-found-card {
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  padding: 2rem;
+}
+
+.not-found-container {
+  h1 {
+    font-size: 6rem;
+    margin: 0;
+    color: #e53935; // Angular Material red accent
+  }
+
+  p {
+    font-size: 1.25rem;
+    margin: 1rem 0 2rem;
+    color: rgba(0, 0, 0, 0.7);
+  }
+}

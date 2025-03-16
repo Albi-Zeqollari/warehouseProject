@@ -3,12 +3,6 @@
   <mat-card-content>
     <form [formGroup]="orderForm" (ngSubmit)="submitOrder()">
       <div class="form-fields">
-        <mat-form-field appearance="fill">
-          <mat-label>Submitted Date</mat-label>
-          <input matInput [matDatepicker]="submittedDatePicker" formControlName="submittedDate">
-          <mat-datepicker-toggle matSuffix [for]="submittedDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #submittedDatePicker></mat-datepicker>
-        </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Deadline Date</mat-label>

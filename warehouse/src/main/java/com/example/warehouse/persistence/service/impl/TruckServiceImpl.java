@@ -1,6 +1,7 @@
 package com.example.warehouse.persistence.service.impl;
 
 import com.example.warehouse.persistence.dtos.TruckDto;
+import com.example.warehouse.persistence.entity.Truck;
 import com.example.warehouse.persistence.repository.TruckRepository;
 import com.example.warehouse.persistence.service.TruckService;
 import jakarta.transaction.Transactional;
@@ -29,17 +30,15 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     @Transactional
-    public List<TruckDto> getAllTrucks() {
-        return truckRepository.findAll()
-                .stream()
-                .map(TruckDto::fromEntity)
-                .collect(Collectors.toList());
+    public List<Truck>getAllTrucks() {
+        return truckRepository.findAll();
+
     }
 
     @Override
     @Transactional
-    public void updateTruck(TruckDto truckDto) {
-        truckRepository.save(truckDto.toEntity());
+    public void updateTruck(Truck truck) {
+        truckRepository.updateTruckById(truck.getLicensePlate(),truck.getChassisNumber(),truck.getId());
     }
 
     @Override
