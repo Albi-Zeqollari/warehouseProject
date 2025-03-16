@@ -2,9 +2,7 @@ package com.example.warehouse.persistence.dtos;
 
 import com.example.warehouse.persistence.entity.Order;
 import com.example.warehouse.persistence.entity.OrderItem;
-import com.example.warehouse.persistence.entity.OrderStatus;
 import com.example.warehouse.persistence.entity.User;
-import jakarta.transaction.Transactional;
 import lombok.Data;
 
 import java.time.LocalDate;

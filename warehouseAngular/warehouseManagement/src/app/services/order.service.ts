@@ -6,6 +6,7 @@ import { Truck } from '../models/truck.interface';
 import { OrderDto } from '../models/Dtos/OrderDto';
 import { environment } from 'src/assets/enviroment';;
 import { Order } from '../models/order.interface';
+import { OrderItemDto } from '../models/Dtos/OrderItemDto';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,26 @@ export class OrderService {
     }
 
     return this.http.put(url, order, { headers });
+  }
+
+  findOrderById(id:number){
+    const url = `${this.baseUrl}/api/manager/orders/${id}`;
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return this.http.get<OrderDto[]>(url, { headers });
+  }
+
+  updateOrderItems(id:number,orderItem:any){
+    const url = `${this.baseUrl}/api/order/updateOrderItems/${id}`;
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return this.http.put(url, orderItem, { headers });
   }
 
 }

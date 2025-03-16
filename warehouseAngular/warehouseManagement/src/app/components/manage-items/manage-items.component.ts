@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,13 +6,14 @@ import { Router } from '@angular/router';
 import { Item } from 'src/app/models/item.interface';
 import { ItemService } from 'src/app/services/item.service';
 import { EditItemComponent } from '../edit-item/edit-item.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-manage-items',
   templateUrl: './manage-items.component.html',
   styleUrls: ['./manage-items.component.scss'],
 })
-export class ManageItemsComponent implements OnInit {
+export class ManageItemsComponent implements OnInit ,AfterViewInit {
   displayedColumns: string[] = [
     'id',
     'name',
@@ -21,18 +22,22 @@ export class ManageItemsComponent implements OnInit {
     'actions',
   ];
 
-  dataSource = new MatTableDataSource<Item>([]);
+  dataSource = new MatTableDataSource<Item>();
+
+ @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private itemService: ItemService,private router:Router,private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadItems();
   }
-
+  ngAfterViewInit(){
+    this.dataSource.paginator = this.paginator;
+  }
   loadItems(): void {
     this.itemService.getAllItems().subscribe({
       next: (items: Item[]) => {
-        // Set the table data
+
         this.dataSource.data = items;
       },
       error: (err: any) => {
@@ -52,11 +57,8 @@ export class ManageItemsComponent implements OnInit {
       data: { item }
     });
 
-    dialogRef.afterClosed().subscribe((updatedItem: Item | undefined) => {
-      if (updatedItem) {
-        console.log('Item was updated:', updatedItem);
+    dialogRef.afterClosed().subscribe((updatedItem: Item) => {
         this.loadItems()
-      }
     });
   }
   deleteItem(item: any) {

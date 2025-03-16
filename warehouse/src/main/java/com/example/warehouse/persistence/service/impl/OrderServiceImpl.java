@@ -1,19 +1,20 @@
 package com.example.warehouse.persistence.service.impl;
 
 import com.example.warehouse.persistence.dtos.OrderDto;
-import com.example.warehouse.persistence.entity.*;
+import com.example.warehouse.persistence.dtos.OrderItemDto;
+import com.example.warehouse.persistence.entity.Item;
+import com.example.warehouse.persistence.entity.Order;
+import com.example.warehouse.persistence.entity.OrderItem;
+import com.example.warehouse.persistence.entity.Truck;
 import com.example.warehouse.persistence.repository.ItemRepository;
+import com.example.warehouse.persistence.repository.OrderItemRepository;
 import com.example.warehouse.persistence.repository.OrderRepository;
 import com.example.warehouse.persistence.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,11 +23,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+    private final OrderItemRepository orderItemRepository;
 
     public OrderServiceImpl(OrderRepository orderRepository,
-                            ItemRepository itemRepository) {
+                            ItemRepository itemRepository, OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
 
@@ -42,56 +45,49 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void updateOrder(Order orderDto) {
-        orderRepository.updateOrderStatusById(orderDto.getStatus(), orderDto.getId());
+        orderRepository.updateOrderStatusById(orderDto.getStatus(), orderDto.getDeclineReason(), orderDto.getId());
     }
 
-    @Override
     @Transactional
-    public void submitOrder(Long orderId) {
-        OrderDto orderDto = getOrder(orderId);
-        if (orderDto == null) {
-            log.error("Order not found");
+    @Override
+    public void updateOrderItem(Long orderId, List<OrderItemDto> orderItemDtos) {
+        List<OrderItem> existingItems = orderItemRepository.findByOrderId(orderId);
+
+        // 2. Create a set of item IDs from the payload
+        Set<Long> payloadItemIds = orderItemDtos.stream()
+                .map(dto -> dto.getItem().getId())
+                .collect(Collectors.toSet());
+
+        // 3. Remove items that are no longer in the payload
+        for (OrderItem existing : existingItems) {
+            log.debug("item id {}", existing.getItem().getId());
+            log.debug("payloadItemId {}", payloadItemIds);
+            if (!payloadItemIds.contains(existing.getItem().getId())) {
+                log.debug("item id {} not in payloadItemIds", existing.getItem().getId());
+                orderItemRepository.removeOrderItemById(orderId, existing.getItem().getId());
+                log.debug("existing id deleted {}", existing.getItem().getId());
+            }
         }
-        if (Objects.equals(orderDto.getStatus(), "CREATED") || Objects.equals(orderDto.getStatus(), "DECLINED")) {
-            orderDto.setStatus("AWAITING_APPROVAL");
-            orderDto.setSubmittedDate(LocalDateTime.now());
-            orderRepository.save(orderDto.toEntity());
+
+        for (OrderItemDto dto : orderItemDtos) {
+            Long itemId = dto.getItem().getId();
+            int requestedQuantity = dto.getRequestedQuantity();
+
+            Optional<OrderItem> existingOpt = orderItemRepository.findByOrderIdAndItemId(orderId, itemId);
+            if (existingOpt.isPresent()) {
+                OrderItem existingItem = existingOpt.get();
+                existingItem.setRequestedQuantity(requestedQuantity);
+                orderItemRepository.save(existingItem);
+            } else {
+                OrderItem newItem = new OrderItem();
+                newItem.setOrder(dto.getOrder());  // Ensure dto.getOrder().getId() equals orderId
+                newItem.setItem(dto.getItem());
+                newItem.setRequestedQuantity(requestedQuantity);
+                orderItemRepository.save(newItem);
+            }
         }
     }
 
-    @Override
-    @Transactional
-    public void approveOrder(Long orderId) {
-        OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null && Objects.equals(orderDto.getStatus(), "AWAITING_APPROVAL")) {
-            orderDto.setStatus("APPROVED");
-            orderRepository.save(orderDto.toEntity());
-        }
-    }
-
-    @Override
-    @Transactional
-    public void declineOrder(Long orderId, String reason) {
-        OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null && Objects.equals(orderDto.getStatus(), "AWAITING_APPROVAL")) {
-            orderDto.setStatus("DECLINED");
-            orderDto.setDeclineReason(reason);
-            orderRepository.save(orderDto.toEntity());
-        }
-    }
-
-    @Override
-    @Transactional
-    public void cancelOrder(Long orderId) {
-        OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null &&
-                !Objects.equals(orderDto.getStatus(), "FULFILLED") &&
-                !Objects.equals(orderDto.getStatus(), "UNDER_DELIVERY") &&
-                !Objects.equals(orderDto.getStatus(), "CANCELED")) {
-            orderDto.setStatus("CANCELED");
-            orderRepository.save(orderDto.toEntity());
-        }
-    }
 
     @Override
     @Transactional
@@ -114,17 +110,6 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(orderDto.toEntity());
         }
     }
-
-    @Override
-    @Transactional
-    public void fulfillOrder(Long orderId) {
-        OrderDto orderDto = getOrder(orderId);
-        if (orderDto != null && Objects.equals(orderDto.getStatus(), "UNDER_DELIVERY")) {
-            orderDto.setStatus("FULFILLED");
-            orderRepository.save(orderDto.toEntity());
-        }
-    }
-
 
     @Override
     @Transactional
@@ -153,6 +138,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(String.valueOf(orderDto.getStatus()));
         order.setDeclineReason(orderDto.getDeclineReason());
         order.setClient(orderDto.getClient());
+        order.setId(orderDto.getId());
 
         // Process each order item.
         List<OrderItem> orderItems = new ArrayList<>();
@@ -160,15 +146,13 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setItem(orderItemDto.getItem());
             orderItem.setRequestedQuantity(orderItemDto.getRequestedQuantity());
-//            orderItem.setOrder(order);
+            orderItem.setOrder(order);
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);
 
         orderRepository.save(order);
     }
-
-
 
 
     private String generateOrderNumber() {

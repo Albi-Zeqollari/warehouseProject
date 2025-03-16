@@ -1,13 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable, switchMap } from 'rxjs';
 import { OrderDto } from 'src/app/models/Dtos/OrderDto';
 import { Order } from 'src/app/models/order.interface';
 import { User } from 'src/app/models/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { OrderService } from 'src/app/services/order.service';
+import { EditItemComponent } from '../edit-item/edit-item.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EditOrderComponent } from '../edit-order/edit-order.component';
 
 
 @Component({
@@ -15,9 +18,9 @@ import { OrderService } from 'src/app/services/order.service';
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
-export class OrderComponent  implements OnInit {
+export class OrderComponent  implements OnInit,AfterViewInit {
   currentUser!: User;
-  orders: OrderDto[] = [];
+  orders: any[] = [];
   filteredOrder: OrderDto[] = [];
   filterStatus: string = 'All';
   displayedColumns: string[] = [
@@ -27,6 +30,8 @@ export class OrderComponent  implements OnInit {
     'deadlineDate',
     'actions'
   ];
+  dataSource = new MatTableDataSource<Order>(this.orders);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(
     private router:Router,
     private orderService:OrderService,
@@ -37,7 +42,6 @@ export class OrderComponent  implements OnInit {
     this.authService.getCurrentUser().subscribe({
       next: (user: User) => {
         this.currentUser = user;
-        // Once we have the user, load their orders
         this.loadOrders();
       },
       error: (err: HttpErrorResponse) => {
@@ -46,13 +50,18 @@ export class OrderComponent  implements OnInit {
     });
   }
 
+  ngAfterViewInit(){
+    this.dataSource.paginator = this.paginator;
+  }
 
-  // order.component.ts
 loadOrders(): void {
   this.orderService.viewMyOrders(this.currentUser.id).subscribe({
     next: (orders: OrderDto[]) => {
       this.orders = orders;
-      this.applyClientFilter(); // apply the status filter
+      console.log(this.orders);
+
+      this.dataSource.data = this.orders
+      this.applyClientFilter();
     },
     error: (err: HttpErrorResponse) => {
       console.error('Failed to fetch orders:', err);
@@ -69,23 +78,31 @@ loadOrders(): void {
     this.router.navigateByUrl("/create-orders")
   }
 
-  viewOrder(order: Order): void {
-    console.log('View order', order);
-  }
+   editOrder(order: Order): void {
 
-  editOrder(order: Order): void {
-    console.log('Edit order', order);
-  }
+    this.router.navigateByUrl(`orders/${order.id}`)
+    //  const dialogRef = this.dialog.open(EditOrderComponent, {
+    //    data: order,
+    //  });
+    //  dialogRef.afterClosed().subscribe((result) => {});
+   }
 
   cancelOrder(order: Order): void {
-    console.log('Delete order', order);
+    order.status = "CANCELED";
+    this.orderService.changeOrderStatus(order).subscribe({
+      next: () => {
+        this.loadOrders();
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Failed to change order status:', err);
+      }
+    });
   }
 
   changeStatus(order: Order): void {
-    order.status = "AWAITING_APPROVAL"; // or the new status you want
+    order.status = "AWAITING_APPROVAL";
     this.orderService.changeOrderStatus(order).subscribe({
       next: () => {
-        // Once the status change is successful, reload orders
         this.loadOrders();
       },
       error: (err: HttpErrorResponse) => {

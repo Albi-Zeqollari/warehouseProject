@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserComponent } from './components/user/user.component';
-import { OrderDetailComponent } from './components/order-detail/order-detail.component';
 import { OrderComponent } from './components/order/order.component';
 import { TruckComponent } from './components/truck/truck.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -33,13 +32,14 @@ import { ViewOrderComponent } from './components/view-order/view-order.component
 import { ManageItemsComponent } from './components/manage-items/manage-items.component';
 import { CreateItemsComponent } from './components/create-items/create-items.component';
 import { EditItemComponent } from './components/edit-item/edit-item.component';
+import { EditOrderComponent } from './components/edit-order/edit-order.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     UserComponent,
-    OrderDetailComponent,
     OrderComponent,
     CreateOrderComponent,
     TruckComponent,
@@ -51,6 +51,7 @@ import { EditItemComponent } from './components/edit-item/edit-item.component';
     ManageItemsComponent,
     CreateItemsComponent,
     EditItemComponent,
+    EditOrderComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +72,7 @@ import { EditItemComponent } from './components/edit-item/edit-item.component';
     MatSelectModule,
     MatPaginatorModule,
     MatDialogModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -14,7 +14,6 @@
     <mat-label>Filter by Status</mat-label>
     <mat-select [(value)]="filterStatus" (selectionChange)="applyClientFilter()">
       <mat-option value="All">All</mat-option>
-      <mat-option value="CREATED">CREATED</mat-option>
       <mat-option value="AWAITING_APPROVAL">AWAITING_APPROVAL</mat-option>
       <mat-option value="APPROVED">APPROVED</mat-option>
       <mat-option value="DECLINED">DECLINED</mat-option>
@@ -64,20 +63,52 @@
         </button>
         <!-- Only show approve/decline buttons if the order is awaiting approval -->
         <ng-container *ngIf="order.status === 'AWAITING_APPROVAL'">
-          <button mat-icon-button color="primary" matTooltip="Approve Order">
+          <!-- Approve Button -->
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="approveOrder(order)"
+            matTooltip="Approve Order"
+          >
             <mat-icon>check_circle</mat-icon>
           </button>
-          <button mat-icon-button color="warn"  matTooltip="Decline Order">
+
+          <!-- Decline Icon (shows text area on click) -->
+          <!-- Only shown if user hasn't already expanded the text area for this row -->
+          <button
+            *ngIf="declineReasonVisibleId !== order.id"
+            mat-icon-button
+            color="warn"
+            (click)="showDeclineReason(order)"
+            matTooltip="Decline Order"
+          >
             <mat-icon>cancel</mat-icon>
           </button>
+          <div *ngIf="declineReasonVisibleId === order.id" style="margin-top: 8px;">
+            <mat-form-field appearance="fill" style="width: 200px;">
+              <mat-label>Reason</mat-label>
+              <textarea
+                matInput
+                rows="2"
+                [formControl]="getDeclineReasonControl(order.id)"
+              ></textarea>
+            </mat-form-field>
+            <div style="display: flex; gap: 8px;">
+              <button mat-raised-button color="warn" (click)="confirmDecline(order)">
+                Decline
+              </button>
+              <button mat-button (click)="cancelDecline()">Cancel</button>
+            </div>
+          </div>
         </ng-container>
       </td>
     </ng-container>
-
-
-
-    <!-- Header and Row Declarations -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+  <mat-paginator [length]="100"
+  [pageSize]="5"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  aria-label="Select page">
+</mat-paginator>
 </div>

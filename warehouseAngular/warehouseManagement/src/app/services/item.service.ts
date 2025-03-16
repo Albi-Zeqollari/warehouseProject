@@ -24,16 +24,23 @@ export class ItemService {
 
   createItem(item: Item): Observable<void> {
     const url = `${this.baseUrl}/api/manager/items`;
-
     const token = localStorage.getItem('token');
     let headers = new HttpHeaders();
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
-
     return this.http.post<void>(url, item, { headers });
   }
 
+  updateItem(item: Item){
+    const url = `${this.baseUrl}/api/manager/items/update`;
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return this.http.put(url, item, { headers });
+  }
 
   deleteItem(id: number) {
     const token = localStorage.getItem('token');

@@ -55,5 +55,21 @@
         background-color: #f1f1f1;
       }
     }
+    .decline-area {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      mat-form-field {
+        width: 150px;
+      }
+
+      .decline-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+    }
   }
 }

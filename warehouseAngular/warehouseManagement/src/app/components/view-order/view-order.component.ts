@@ -29,11 +29,10 @@ export class ViewOrderComponent implements OnInit {
       declineReason: [{ value: '', disabled: true }],
       clientUsername: [{ value: '', disabled: true }],
 
-      // IMPORTANT: Define the FormArray here.
       orderItems: this.fb.array([])
     });
 
-    // 2. Populate the form after it’s created, if data is provided.
+
     if (this.data) {
       this.populateForm(this.data);
     }

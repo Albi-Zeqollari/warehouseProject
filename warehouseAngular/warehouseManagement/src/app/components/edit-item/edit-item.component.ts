@@ -10,18 +10,15 @@ import { ItemService } from 'src/app/services/item.service';
   styleUrls: ['./edit-item.component.scss']
 })
 export class EditItemComponent implements OnInit{
-
   editItemForm!: FormGroup;
-
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EditItemComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { item: Item } ,
+    @Inject(MAT_DIALOG_DATA) public data:any,
     private itemService:ItemService// The passed-in item
   ) {}
 
   ngOnInit(): void {
-    // Initialize the form with the item's existing data
     this.editItemForm = this.fb.group({
       name: [this.data.item.name, Validators.required],
       quantity: [this.data.item.quantity, [Validators.required, Validators.min(1)]],
@@ -29,26 +26,23 @@ export class EditItemComponent implements OnInit{
     });
   }
 
+
   onSave(): void {
     if (this.editItemForm.valid) {
-      // Merge the updated form values with the original item (to retain id, etc.)
       const updatedItem: Item = { ...this.data.item, ...this.editItemForm.value };
+      this.itemService.updateItem(updatedItem).subscribe({
+        next: () => {
 
-      // Call your service to update the item
-      // this.itemService.updateItem(updatedItem).subscribe({
-      //   next: (result: Item) => {
-      //     // Close the dialog, returning the updated item
-      //     this.dialogRef.close(result);
-      //   },
-      //   error: (err: any) => {
-      //     console.error('Error updating item:', err);
-      //   }
-      // });
+         this.onCancel()
+        },
+        error: (err) => {
+          console.error('Error updating user:', err);
+        }
+      });
     }
   }
 
   onCancel(): void {
-    // Simply close the dialog without saving
     this.dialogRef.close();
   }
 

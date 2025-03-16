@@ -6,7 +6,7 @@ import { ItemService } from 'src/app/services/item.service';
 import { Item } from 'src/app/models/item.interface';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from 'src/app/services/auth.service';
-import { Store } from '@ngrx/store';
+
 
 @Component({
   selector: 'app-create-order',
@@ -23,9 +23,9 @@ export class CreateOrderComponent implements OnInit {
     private itemService: ItemService,
     private authService: AuthService,
     private router:Router,
-    private store: Store,
   ) {
     this.orderForm = this.fb.group({
+      id:[''],
       submittedDate: ['', Validators.required],
       deadlineDate: ['', Validators.required],
       status: ['CREATED'],
@@ -93,6 +93,8 @@ export class CreateOrderComponent implements OnInit {
       };
     });
     this.orderService.createOrder(orderData).subscribe(()=>{
+      console.log(orderData);
+
       this.goToOrders()
     })
   }

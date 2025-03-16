@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
-import { OrderDetailComponent } from './components/order-detail/order-detail.component';
 import { OrderComponent } from './components/order/order.component';
 import { TruckComponent } from './components/truck/truck.component';
 import { UserComponent } from './components/user/user.component';
@@ -12,6 +11,7 @@ import { CreateUserComponent } from './components/create-user/create-user.compon
 import { WarehouseComponent } from './components/warehouse/warehouse.component';
 import { ManageItemsComponent } from './components/manage-items/manage-items.component';
 import { CreateItemsComponent } from './components/create-items/create-items.component';
+import { EditOrderComponent } from './components/edit-order/edit-order.component';
 
 
 export const routes: Routes = [
@@ -31,7 +31,7 @@ export const routes: Routes = [
     },
     {
       path: 'orders/:id',
-      component: OrderDetailComponent,
+      component: EditOrderComponent,
       canActivate: [AuthGuard],
       data: { roles: ['CLIENT','WAREHOUSE_MANAGER'] }
     },

@@ -1,11 +1,9 @@
 package com.example.warehouse.persistence.service;
 
 import com.example.warehouse.persistence.dtos.OrderDto;
+import com.example.warehouse.persistence.dtos.OrderItemDto;
 import com.example.warehouse.persistence.dtos.UserDto;
-import com.example.warehouse.persistence.entity.Order;
-import com.example.warehouse.persistence.entity.OrderStatus;
-import com.example.warehouse.persistence.entity.Truck;
-import com.example.warehouse.persistence.entity.User;
+import com.example.warehouse.persistence.entity.*;
 
 import java.util.List;
 
@@ -15,17 +13,9 @@ public interface OrderService {
 
     void updateOrder(Order orderDto);
 
-    void submitOrder(Long orderId);
-
-    void approveOrder(Long orderId);
-
-    void declineOrder(Long orderId, String reason);
-
-    void cancelOrder(Long orderId);
-
     void scheduleDelivery(Long orderId, List<Truck> assignedTrucks);
 
-    void fulfillOrder(Long orderId);
+    void updateOrderItem(Long orderId,List<OrderItemDto> order);
 
     List<Order> findAll();
 

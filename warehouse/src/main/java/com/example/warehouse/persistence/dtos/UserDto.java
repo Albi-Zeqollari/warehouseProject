@@ -1,6 +1,5 @@
 package com.example.warehouse.persistence.dtos;
 
-import com.example.warehouse.persistence.entity.Role;
 import com.example.warehouse.persistence.entity.User;
 import lombok.Data;
 
