@@ -18,7 +18,7 @@
           <button mat-menu-item>
             <span class="logged-in-info">
               Username :
-              {{ currentUser.username.trim().length === 8 ? '' : '' + (currentUser.username.trim() | lowercase) }}
+              {{ (currentUser.username.trim() | lowercase) }}
             </span>
           </button>
           <button mat-menu-item (click)="logout()">
