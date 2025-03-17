@@ -45,7 +45,7 @@ export class EditTruckComponent {
         },
         error: (err) => {
           console.error('Error updating truck:', err);
-          this.snackBar.open('Failed to update truck', 'Close', { duration: 3000 });
+          this.snackBar.open('Cant update truck who is assigned for delivery', 'Close', { duration: 3000 });
         }
       });
       this.subscriptions.add(updateSub);
