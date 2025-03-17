@@ -31,6 +31,7 @@ export class OrderComponent implements OnInit, AfterViewInit, OnDestroy {
     'orderNumber',
     'submittedDate',
     'status',
+    'declineReason',
     'actions',
   ];
   dataSource = new MatTableDataSource<any>(this.orders);

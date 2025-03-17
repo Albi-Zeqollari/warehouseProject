@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,4 +56,19 @@ public class TruckServiceImpl implements TruckService {
         truckRepository.deleteById(id);
     }
 
+
+    @Override
+    @Transactional
+    public List<TruckDto> getAvailableTrucks(LocalDate deliveryDate) {
+        List<Truck> trucks = truckRepository.findAvailableTrucks(deliveryDate);
+        return trucks.stream()
+                .map(truck -> {
+                    TruckDto dto = new TruckDto();
+                    dto.setId(truck.getId());
+                    dto.setChassisNumber(truck.getChassisNumber());
+                    dto.setLicensePlate(truck.getLicensePlate());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }

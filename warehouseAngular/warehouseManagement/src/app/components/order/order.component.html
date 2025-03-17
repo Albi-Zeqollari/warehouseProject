@@ -37,11 +37,19 @@
       <th mat-header-cell *matHeaderCellDef> Status </th>
       <td mat-cell *matCellDef="let order"> {{ order.status }} </td>
     </ng-container>
-<!--
-    <ng-container matColumnDef="deadlineDate">
-      <th mat-header-cell *matHeaderCellDef> Deadline Date </th>
-      <td mat-cell *matCellDef="let order"> {{ order.deadlineDate | date: 'short' }} </td>
-    </ng-container> -->
+
+    <ng-container matColumnDef="declineReason">
+      <th mat-header-cell *matHeaderCellDef> Decline Reason </th>
+      <td mat-cell *matCellDef="let order">
+        <ng-container *ngIf="order.status === 'DECLINED'; else noReason">
+          {{ order.declineReason }}
+        </ng-container>
+        <ng-template #noReason>
+          -
+        </ng-template>
+      </td>
+    </ng-container>
+
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>

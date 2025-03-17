@@ -19,6 +19,8 @@ import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
+import { ScheduleDeliveryComponent } from '../schedule-delivery/schedule-delivery.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-warehouse',
@@ -48,7 +50,8 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private router: Router,
     private orderService: OrderService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -99,13 +102,23 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogRef = this.dialog.open(ViewOrderComponent, {
       data: order,
     });
-
-    const dialogSub = dialogRef.afterClosed().subscribe(() => {
-    });
+    const dialogSub = dialogRef.afterClosed().subscribe(() => {});
     this.subscriptions.add(dialogSub);
   }
 
   approveOrder(order: Order): void {
+    const insufficientItem = order.orderItems.find((orderItem: any) => {
+      return orderItem.item.quantity < orderItem.requestedQuantity;
+    });
+
+    if (insufficientItem) {
+      this.snackBar.open(
+        `Insufficient quantity for item ${insufficientItem.item.name}. Available: ${insufficientItem.item.quantity}, Requested: ${insufficientItem.requestedQuantity}`,
+        'Close',
+        { duration: 5000 }
+      );
+      return;
+    }
     order.status = 'APPROVED';
     const approveSub = this.orderService.changeOrderStatus(order).subscribe({
       next: () => {
@@ -117,7 +130,6 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.subscriptions.add(approveSub);
   }
-
   getDeclineReasonControl(orderId: number): FormControl {
     if (!this.declineReasonControlMap[orderId]) {
       this.declineReasonControlMap[orderId] = new FormControl('');
@@ -141,9 +153,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
     order.status = 'DECLINED';
     order.declineReason = typedReason;
 
-    const declineSub = this.orderService.changeOrderStatus(order).subscribe(() => {
-      this.loadManagerOrders();
-    });
+    const declineSub = this.orderService
+      .changeOrderStatus(order)
+      .subscribe(() => {
+        this.loadManagerOrders();
+      });
     this.subscriptions.add(declineSub);
 
     this.declineReasonVisibleId = null;
@@ -153,12 +167,16 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigateByUrl('manage-items');
   }
   scheduleDelivery(order: Order): void {
-    // Navigate to the scheduling component or open a dialog.
-    // Example: navigate to a scheduling page with the order id as a parameter:
-    this.router.navigateByUrl(`/schedule-delivery/${order.id}`);
+    const dialogRef = this.dialog.open(ScheduleDeliveryComponent, {
+      data: order.id,
+    });
+    const dialogSub = dialogRef.afterClosed().subscribe(() => {
+      this.loadManagerOrders()
+    });
+    this.subscriptions.add(dialogSub);
   }
 
-  goToTrucks(){
+  goToTrucks() {
     this.router.navigateByUrl('manage-trucks');
   }
 

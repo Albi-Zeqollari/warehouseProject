@@ -1,0 +1,31 @@
+.schedule-delivery-container {
+  padding: 16px;
+
+  // Ensure full width for form fields
+  .full-width {
+    width: 100%;
+  }
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ccc;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  button {
+    margin: 0;
+    padding: 0;
+    mat-icon {
+      font-size: 24px;
+    }
+  }
+}

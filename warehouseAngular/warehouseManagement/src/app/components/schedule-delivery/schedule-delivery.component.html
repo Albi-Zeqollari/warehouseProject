@@ -1,0 +1,28 @@
+<div class="schedule-delivery-container">
+  <div class="dialog-header">
+    <h2>Schedule Delivery</h2>
+    <button mat-icon-button (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="scheduleForm" (ngSubmit)="scheduleDelivery()">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Delivery Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="deliveryDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Select Truck(s)</mat-label>
+      <mat-select formControlName="truckIds" multiple>
+        <mat-option *ngFor="let truck of availableTrucks" [value]="truck.id">
+          {{ truck.licensePlate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Schedule Delivery</button>
+  </form>
+</div>

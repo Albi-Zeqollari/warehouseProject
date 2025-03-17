@@ -1,12 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrderItem } from '../models/orderItem.inteface';
-import { Truck } from '../models/truck.interface';
 import { OrderDto } from '../models/Dtos/OrderDto';
 import { environment } from 'src/assets/enviroment';;
 import { Order } from '../models/order.interface';
-import { OrderItemDto } from '../models/Dtos/OrderItemDto';
 
 @Injectable({
   providedIn: 'root'

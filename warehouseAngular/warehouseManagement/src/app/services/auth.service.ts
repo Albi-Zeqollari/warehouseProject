@@ -1,4 +1,4 @@
-// auth.service.ts
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../src/assets/enviroment';
@@ -10,9 +10,8 @@ import {
   switchMap,
   take,
   tap,
-  throwError,
 } from 'rxjs';
-import { User } from '../models/user.interface';
+
 
 @Injectable({
   providedIn: 'root',

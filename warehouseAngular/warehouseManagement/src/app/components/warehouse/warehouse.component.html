@@ -73,8 +73,7 @@
           </div>
         </ng-container>
 
-        <!-- New action: Schedule Delivery -->
-        <ng-container *ngIf="order.status === 'UNDER_DELIVERY'">
+        <ng-container *ngIf="order.status === 'APPROVED'">
           <button mat-icon-button color="accent" (click)="scheduleDelivery(order)" matTooltip="Schedule Delivery">
             <mat-icon>local_shipping</mat-icon>
           </button>

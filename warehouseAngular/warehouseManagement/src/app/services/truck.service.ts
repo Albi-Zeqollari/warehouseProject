@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/assets/enviroment';
-import { Item } from '../models/item.interface';
 import { Truck } from '../models/truck.interface';
 
 @Injectable({
@@ -23,6 +22,17 @@ export class TruckService {
     return this.http.get<Truck[]>(url, { headers });
   }
 
+  getAvailableTrucks(deliveryDate: Date): Observable<any[]> {
+    const formattedDate = deliveryDate.toISOString().split('T')[0];
+    const url = `${this.baseUrl}/api/manager/trucks/available?deliveryDate=${formattedDate}`;
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return this.http.get<any>(url, { headers });
+
+  }
   createTruck(truck: Truck): Observable<void> {
     const url = `${this.baseUrl}/api/manager/trucks`;
     const token = localStorage.getItem('token');

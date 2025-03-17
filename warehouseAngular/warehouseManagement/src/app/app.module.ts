@@ -38,6 +38,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { ManageTrucksComponent } from './components/manage-trucks/manage-trucks.component';
 import { EditTruckComponent } from './components/edit-truck/edit-truck.component';
 import { CreateTruckComponent } from './components/create-truck/create-truck.component';
+import { ScheduleDeliveryComponent } from './components/schedule-delivery/schedule-delivery.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { CreateTruckComponent } from './components/create-truck/create-truck.com
     ManageTrucksComponent,
     EditTruckComponent,
     CreateTruckComponent,
+    ScheduleDeliveryComponent,
   ],
   imports: [
     BrowserModule,
