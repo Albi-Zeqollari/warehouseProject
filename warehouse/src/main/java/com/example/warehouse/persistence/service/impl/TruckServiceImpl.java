@@ -30,15 +30,23 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     @Transactional
-    public List<Truck>getAllTrucks() {
-        return truckRepository.findAll();
-
+    public List<TruckDto> getAllTrucks() {
+        List<Truck> trucks = truckRepository.findAll();
+        return trucks.stream()
+                .map(truck -> {
+                    TruckDto dto = new TruckDto();
+                    dto.setId(truck.getId());
+                    dto.setChassisNumber(truck.getChassisNumber());
+                    dto.setLicensePlate(truck.getLicensePlate());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public void updateTruck(Truck truck) {
-        truckRepository.updateTruckById(truck.getLicensePlate(),truck.getChassisNumber(),truck.getId());
+        truckRepository.updateTruckById(truck.getLicensePlate(), truck.getChassisNumber(), truck.getId());
     }
 
     @Override
@@ -46,4 +54,5 @@ public class TruckServiceImpl implements TruckService {
     public void deleteTruck(Long id) {
         truckRepository.deleteById(id);
     }
+
 }

@@ -152,6 +152,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
   goToItems(): void {
     this.router.navigateByUrl('manage-items');
   }
+  scheduleDelivery(order: Order): void {
+    // Navigate to the scheduling component or open a dialog.
+    // Example: navigate to a scheduling page with the order id as a parameter:
+    this.router.navigateByUrl(`/schedule-delivery/${order.id}`);
+  }
 
   goToTrucks(){
     this.router.navigateByUrl('manage-trucks');

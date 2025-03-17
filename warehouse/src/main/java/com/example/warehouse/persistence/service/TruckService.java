@@ -9,9 +9,10 @@ public interface TruckService {
 
     void createTruck(TruckDto truckDto);
 
-    List<Truck> getAllTrucks();
+    List<TruckDto> getAllTrucks();
 
     void updateTruck(Truck truck);
 
     void deleteTruck(Long id);
+
 }

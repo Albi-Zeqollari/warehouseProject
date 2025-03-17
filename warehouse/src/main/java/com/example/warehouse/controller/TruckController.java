@@ -25,7 +25,7 @@ public class TruckController {
     }
 
     @GetMapping
-    public List<Truck> getAllTrucks() {
+    public List<TruckDto> getAllTrucks() {
         return truckService.getAllTrucks();
     }
 
@@ -38,4 +38,5 @@ public class TruckController {
     public void deleteTruck(@PathVariable Long truckId) {
         truckService.deleteTruck(truckId);
     }
+
 }

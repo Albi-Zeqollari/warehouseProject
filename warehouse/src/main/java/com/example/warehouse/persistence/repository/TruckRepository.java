@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface TruckRepository extends JpaRepository<Truck, Long> {
 
     @Modifying
@@ -13,4 +15,5 @@ public interface TruckRepository extends JpaRepository<Truck, Long> {
     void updateTruckById(@Param("licensePlate") String licensePlate,
                         @Param("chassisNumber") String chassisNumber,
                         @Param("id") Long id);
+
 }

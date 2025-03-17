@@ -7,14 +7,18 @@ import lombok.Data;
 @Data
 public class TruckDto {
 
+    private  Long id;
+
     private String chassisNumber;
 
     private String licensePlate;
+
 
     public Truck toEntity() {
         Truck truck = new Truck();
         truck.setChassisNumber(chassisNumber);
         truck.setLicensePlate(licensePlate);
+        truck.setId(id);
         return truck;
     }
 
@@ -22,6 +26,7 @@ public class TruckDto {
         TruckDto truckDto = new TruckDto();
         truckDto.chassisNumber = truck.getChassisNumber();
         truckDto.licensePlate = truck.getLicensePlate();
+        truckDto.id = truck.getId();
         return truckDto;
     }
 
