@@ -9,7 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  currentUser: any; // Assume this is set once the user logs in
+  currentUser: any;
   currentUrl: string = '';
 
   constructor(private router: Router,private authService:AuthService) {

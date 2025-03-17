@@ -21,6 +21,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { ScheduleDeliveryComponent } from '../schedule-delivery/schedule-delivery.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-warehouse',
@@ -45,6 +46,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource<any>(this.orders);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -69,8 +71,15 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-  }
 
+    this.dataSource.sort = this.sort;
+
+    this.sort.sort({
+      id: 'submittedDate',
+      start: 'desc',
+      disableClear: false
+    });
+  }
   loadManagerOrders(): void {
     const ordersSub = this.orderService.getAllOrdersForManager().subscribe({
       next: (orders: any[]) => {
@@ -86,17 +95,11 @@ export class WarehouseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   applyClientFilter(): void {
     this.filteredOrder = this.orders
-      .filter(
-        (order: any) =>
-          this.filterStatus === 'All' || order.status === this.filterStatus
-      )
-      .sort(
-        (a, b) =>
-          new Date(b.submittedDate!).getTime() -
-          new Date(a.submittedDate!).getTime()
-      );
+      .filter((order: any) => this.filterStatus === 'All' || order.status === this.filterStatus)
+      .sort((a, b) => new Date(b.submittedDate).getTime() - new Date(a.submittedDate).getTime());
     this.dataSource.data = this.filteredOrder;
   }
+
 
   viewOrder(order: Order): void {
     const dialogRef = this.dialog.open(ViewOrderComponent, {

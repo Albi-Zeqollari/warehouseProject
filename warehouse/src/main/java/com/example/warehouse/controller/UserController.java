@@ -52,7 +52,6 @@ public class UserController {
 
     @GetMapping("/currentUser")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
-        // If there is no valid Authentication, respond with 401
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

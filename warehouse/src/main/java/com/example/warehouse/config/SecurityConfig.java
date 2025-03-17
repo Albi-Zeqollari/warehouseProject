@@ -41,16 +41,11 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1) Whitelist login and register
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-
-                        // 2) Everything else requires authentication
                         .anyRequest().authenticated()
                 )
-                // Provide your AuthenticationProvider
                 .authenticationProvider(authProvider)
-                // Add the JwtAuthenticationFilter
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
                 orderItemRepository.save(existingItem);
             } else {
                 OrderItem newItem = new OrderItem();
-                newItem.setOrder(dto.getOrder());  // Ensure dto.getOrder().getId() equals orderId
+                newItem.setOrder(dto.getOrder());
                 newItem.setItem(dto.getItem());
                 newItem.setRequestedQuantity(requestedQuantity);
                 orderItemRepository.save(newItem);

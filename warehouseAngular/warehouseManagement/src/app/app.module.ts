@@ -39,6 +39,8 @@ import { ManageTrucksComponent } from './components/manage-trucks/manage-trucks.
 import { EditTruckComponent } from './components/edit-truck/edit-truck.component';
 import { CreateTruckComponent } from './components/create-truck/create-truck.component';
 import { ScheduleDeliveryComponent } from './components/schedule-delivery/schedule-delivery.component';
+import { MatSortModule } from '@angular/material/sort';
+
 
 @NgModule({
   declarations: [
@@ -82,7 +84,8 @@ import { ScheduleDeliveryComponent } from './components/schedule-delivery/schedu
     MatSelectModule,
     MatPaginatorModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]
